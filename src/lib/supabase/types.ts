@@ -62,6 +62,12 @@ export interface Database {
   [key: string]: any;
   public: {
     Tables: {
+      customers: {
+        Row:    { id: string; owner_id: string; dodo_customer_id: string | null; dodo_subscription_id: string | null; plan: string; plan_period_end: string | null; created_at: string; updated_at: string };
+        Insert: { owner_id: string; dodo_customer_id?: string | null; dodo_subscription_id?: string | null; plan?: string; plan_period_end?: string | null };
+        Update: { dodo_customer_id?: string | null; dodo_subscription_id?: string | null; plan?: string; plan_period_end?: string | null };
+        Relationships: [];
+      };
       projects:  {
         Row:    Project;
         Insert: Omit<Project, "id"|"share_token"|"created_at"|"updated_at"> & { status?: ProjectStatus; is_contract?: boolean };

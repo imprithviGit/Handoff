@@ -94,6 +94,16 @@ function StatusDropdown({
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 
+async function startCheckout(plan: string) {
+  const res = await fetch("/api/dodo/checkout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ plan }),
+  });
+  const data = await res.json();
+  if (data.url) window.location.href = data.url;
+}
+
 export default function DashboardPage() {
   const { projects: dbProjects, loading, refetch } = useProjects();
   const { unread } = useNotifications(dbProjects.map((p) => p.id));
@@ -189,14 +199,35 @@ export default function DashboardPage() {
           <p className="text-xs text-gray-400 mt-0.5">Manage your active client work</p>
         </div>
         <button
-          onClick={() => setShowModal(true)}
+          onClick={() => dbProjects.length >= 1 ? startCheckout("pro_annual") : setShowModal(true)}
           className="cursor-pointer flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-black font-semibold text-sm px-4 py-2 rounded-lg transition-colors shadow-sm"
         >
-          <span className="text-base leading-none">+</span> New project
+          <span className="text-base leading-none">+</span> {dbProjects.length >= 1 ? "Upgrade for more" : "New project"}
         </button>
       </div>
 
       <div className="px-8 py-7 max-w-7xl mx-auto">
+
+        {/* ── Free plan upgrade banner ──────────────────────────────────── */}
+        {dbProjects.length >= 1 && (
+          <div className="mb-5 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl px-5 py-4 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
+                <span className="text-sm">⚡</span>
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold text-gray-900">You&apos;re on the free plan — 1 project limit</p>
+                <p className="text-[11px] text-gray-500 mt-0.5">Upgrade to Pro for unlimited projects, custom branding, and 1GB storage.</p>
+              </div>
+            </div>
+            <button
+              onClick={() => startCheckout("pro_annual")}
+              className="cursor-pointer shrink-0 bg-emerald-500 hover:bg-emerald-400 text-black text-[12px] font-bold px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
+            >
+              Upgrade to Pro →
+            </button>
+          </div>
+        )}
 
         {/* ── Stats row ────────────────────────────────────────────────── */}
         <div className="grid grid-cols-4 gap-3 mb-5">

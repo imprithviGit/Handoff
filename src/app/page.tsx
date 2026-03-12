@@ -25,8 +25,26 @@ const testimonials = [
   { name: "Tom Hargreaves", role: "Copywriter, London", initial: "T", color: "bg-amber-100 text-amber-700", text: "Sending a Handoff link instead of a Google Doc made me look 10x more serious. Signed two new retainers in the same month I switched." },
 ];
 
+async function startCheckout(plan: string) {
+  const res = await fetch("/api/dodo/checkout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ plan }),
+  });
+  const data = await res.json();
+  if (data.url) window.location.href = data.url;
+  else alert("Something went wrong. Please try again.");
+}
+
 export default function Home() {
   const [pricingTab, setPricingTab] = useState<"monthly" | "annual" | "lifetime">("annual");
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+
+  async function handleCheckout(plan: string) {
+    setLoadingPlan(plan);
+    await startCheckout(plan);
+    setLoadingPlan(null);
+  }
 
   return (
     <div className="min-h-screen bg-white text-gray-900" style={{ fontFamily: "var(--font-geist), sans-serif" }}>
@@ -524,8 +542,12 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <button className="cursor-pointer w-full py-3 rounded-xl bg-black text-emerald-400 font-bold text-sm hover:bg-gray-900 transition-colors">
-                  Start 14-day free trial
+                <button
+                  onClick={() => handleCheckout(pricingTab === "annual" ? "pro_annual" : "pro_monthly")}
+                  disabled={loadingPlan !== null}
+                  className="cursor-pointer w-full py-3 rounded-xl bg-black text-emerald-400 font-bold text-sm hover:bg-gray-900 transition-colors disabled:opacity-50"
+                >
+                  {loadingPlan === "pro_annual" || loadingPlan === "pro_monthly" ? "Redirecting…" : "Get started →"}
                 </button>
               </div>
             </div>
@@ -565,8 +587,12 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <button className="cursor-pointer w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-sm transition-colors">
-                  Get lifetime access →
+                <button
+                  onClick={() => handleCheckout("lifetime")}
+                  disabled={loadingPlan !== null}
+                  className="cursor-pointer w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-sm transition-colors disabled:opacity-50"
+                >
+                  {loadingPlan === "lifetime" ? "Redirecting…" : "Get lifetime access →"}
                 </button>
               </div>
             </div>
