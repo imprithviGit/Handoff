@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import DodoPayments from "dodopayments";
 
-const DODO_API_BASE = "https://test.dodo.ac/v1"; // switch to https://api.dodo.ac/v1 in production
+const dodo = new DodoPayments({
+  bearerToken: process.env.DODO_API_KEY!,
+  environment: "test_mode", // switch to "live_mode" when going live
+});
 
 const PRODUCT_MAP: Record<string, string> = {
   pro_monthly: process.env.DODO_PRO_MONTHLY_PRODUCT_ID!,
@@ -18,25 +22,18 @@ export async function POST(req: NextRequest) {
 
   const origin = req.headers.get("origin") ?? "https://handoff-eight.vercel.app";
 
-  const res = await fetch(`${DODO_API_BASE}/payment_links`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.DODO_API_KEY}`,
-    },
-    body: JSON.stringify({
-      product_id:   productId,
-      success_url:  `${origin}/dashboard?upgraded=true`,
-      cancel_url:   `${origin}/#pricing`,
-    }),
-  });
+  try {
+    const session = await dodo.checkoutSessions.create({
+      product_cart: [{ product_id: productId, quantity: 1 }],
+      return_url: `${origin}/dashboard?upgraded=true`,
+    });
 
-  const data = await res.json();
+    const url = session.checkout_url;
+    if (!url) throw new Error("No checkout URL returned");
 
-  if (!res.ok) {
-    console.error("Dodo checkout error:", data);
-    return NextResponse.json({ error: data?.message ?? "Checkout failed" }, { status: 500 });
+    return NextResponse.json({ url });
+  } catch (err) {
+    console.error("Dodo checkout error:", err);
+    return NextResponse.json({ error: "Checkout failed" }, { status: 500 });
   }
-
-  return NextResponse.json({ url: data.url ?? data.payment_link ?? data.checkout_url });
 }

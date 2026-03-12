@@ -1,81 +1,70 @@
 import { NextRequest, NextResponse } from "next/server";
+import DodoPayments from "dodopayments";
 import { upsertCustomer } from "@/lib/actions/billing";
 import type { Plan } from "@/lib/actions/billing";
-import { createHmac, timingSafeEqual } from "crypto";
 
-function verifySignature(payload: string, signature: string, secret: string): boolean {
-  try {
-    const hmac = createHmac("sha256", secret).update(payload).digest("hex");
-    return timingSafeEqual(Buffer.from(hmac), Buffer.from(signature));
-  } catch {
-    return false;
-  }
-}
+const dodo = new DodoPayments({
+  bearerToken: process.env.DODO_API_KEY!,
+  environment: "test_mode", // switch to "live_mode" when going live
+});
 
 function planFromProductId(productId: string): Plan {
-  if (productId === process.env.DODO_LIFETIME_PRODUCT_ID) return "lifetime";
-  if (
-    productId === process.env.DODO_PRO_MONTHLY_PRODUCT_ID ||
-    productId === process.env.DODO_PRO_ANNUAL_PRODUCT_ID
-  ) return "pro";
+  if (productId === process.env.DODO_LIFETIME_PRODUCT_ID)    return "lifetime";
+  if (productId === process.env.DODO_PRO_MONTHLY_PRODUCT_ID) return "pro";
+  if (productId === process.env.DODO_PRO_ANNUAL_PRODUCT_ID)  return "pro";
   return "free";
 }
 
 export async function POST(req: NextRequest) {
-  const payload   = await req.text();
-  const signature = req.headers.get("webhook-signature") ?? req.headers.get("x-dodo-signature") ?? "";
-  const secret    = process.env.DODO_WEBHOOK_SECRET!;
+  const payload = await req.text();
+  const headers: Record<string, string> = {};
+  req.headers.forEach((value, key) => { headers[key] = value; });
 
-  if (!verifySignature(payload, signature, secret)) {
-    console.error("Invalid Dodo webhook signature");
+  let event: ReturnType<typeof dodo.webhooks.unsafeUnwrap>;
+  try {
+    event = dodo.webhooks.unwrap(payload, {
+      headers,
+      key: process.env.DODO_WEBHOOK_SECRET!,
+    });
+  } catch (err) {
+    console.error("Dodo webhook verification failed:", err);
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
 
-  let event: Record<string, unknown>;
-  try {
-    event = JSON.parse(payload);
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
-  }
-
-  const type = event.type as string;
-  const data = event.data as Record<string, unknown>;
+  const type = event.type;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const data = event.data as Record<string, any>;
 
   console.log("Dodo webhook:", type);
 
   if (type === "payment.succeeded") {
-    const productId    = data.product_id as string;
-    const customerId   = data.customer_id as string;
-    const plan         = planFromProductId(productId);
-    const periodEnd    = data.period_end as string | null ?? null;
-
+    const productId  = data.product_id as string;
+    const customerId = data.customer?.customer_id as string ?? data.customer_id as string;
     await upsertCustomer({
       dodo_customer_id: customerId,
-      plan,
-      plan_period_end: periodEnd,
+      plan: planFromProductId(productId),
+      plan_period_end: null,
     });
   }
 
   if (type === "subscription.active") {
     const productId      = data.product_id as string;
-    const customerId     = data.customer_id as string;
+    const customerId     = data.customer?.customer_id as string ?? data.customer_id as string;
     const subscriptionId = data.subscription_id as string;
     const periodEnd      = data.current_period_end as string | null ?? null;
-
     await upsertCustomer({
-      dodo_customer_id:      customerId,
-      dodo_subscription_id:  subscriptionId,
-      plan:                  planFromProductId(productId),
-      plan_period_end:       periodEnd,
+      dodo_customer_id:     customerId,
+      dodo_subscription_id: subscriptionId,
+      plan:                 planFromProductId(productId),
+      plan_period_end:      periodEnd,
     });
   }
 
   if (type === "subscription.renewed") {
-    const periodEnd      = data.current_period_end as string | null ?? null;
-    const subscriptionId = data.subscription_id as string;
-    const customerId     = data.customer_id as string;
     const productId      = data.product_id as string;
-
+    const customerId     = data.customer?.customer_id as string ?? data.customer_id as string;
+    const subscriptionId = data.subscription_id as string;
+    const periodEnd      = data.current_period_end as string | null ?? null;
     await upsertCustomer({
       dodo_customer_id:     customerId,
       dodo_subscription_id: subscriptionId,
