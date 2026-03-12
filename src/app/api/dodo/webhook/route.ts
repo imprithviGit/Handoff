@@ -41,12 +41,15 @@ export async function POST(req: NextRequest) {
   console.log("Dodo webhook:", type);
 
   if (type === "payment.succeeded") {
-    const productId  = data.product_id as string;
-    const customerId = data.customer?.customer_id as string ?? data.customer_id as string;
+    const customerId     = data.customer?.customer_id as string ?? data.customer_id as string;
+    const subscriptionId = data.subscription_id as string | null ?? null;
+    // If there's a subscription_id it's a recurring plan (pro), otherwise lifetime one-time
+    const plan: Plan = subscriptionId ? "pro" : "lifetime";
     await upsertCustomer({
-      dodo_customer_id: customerId,
-      plan: planFromProductId(productId),
-      plan_period_end: null,
+      dodo_customer_id:     customerId,
+      dodo_subscription_id: subscriptionId ?? undefined,
+      plan,
+      plan_period_end: null, // will be updated by subscription.active event
     });
   }
 
@@ -54,7 +57,7 @@ export async function POST(req: NextRequest) {
     const productId      = data.product_id as string;
     const customerId     = data.customer?.customer_id as string ?? data.customer_id as string;
     const subscriptionId = data.subscription_id as string;
-    const periodEnd      = data.current_period_end as string | null ?? null;
+    const periodEnd      = data.next_billing_date as string | null ?? null;
     await upsertCustomer({
       dodo_customer_id:     customerId,
       dodo_subscription_id: subscriptionId,
@@ -67,7 +70,7 @@ export async function POST(req: NextRequest) {
     const productId      = data.product_id as string;
     const customerId     = data.customer?.customer_id as string ?? data.customer_id as string;
     const subscriptionId = data.subscription_id as string;
-    const periodEnd      = data.current_period_end as string | null ?? null;
+    const periodEnd      = data.next_billing_date as string | null ?? null;
     await upsertCustomer({
       dodo_customer_id:     customerId,
       dodo_subscription_id: subscriptionId,
