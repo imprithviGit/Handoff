@@ -3,10 +3,12 @@ import DodoPayments from "dodopayments";
 import { upsertCustomer } from "@/lib/actions/billing";
 import type { Plan } from "@/lib/actions/billing";
 
-const dodo = new DodoPayments({
-  bearerToken: process.env.DODO_API_KEY!,
-  environment: "test_mode", // switch to "live_mode" when going live
-});
+function getDodo() {
+  return new DodoPayments({
+    bearerToken: process.env.DODO_API_KEY!,
+    environment: "test_mode",
+  });
+}
 
 function planFromProductId(productId: string): Plan {
   if (productId === process.env.DODO_LIFETIME_PRODUCT_ID)    return "lifetime";
@@ -20,6 +22,7 @@ export async function POST(req: NextRequest) {
   const headers: Record<string, string> = {};
   req.headers.forEach((value, key) => { headers[key] = value; });
 
+  const dodo = getDodo();
   let event: ReturnType<typeof dodo.webhooks.unsafeUnwrap>;
   try {
     event = dodo.webhooks.unwrap(payload, {
