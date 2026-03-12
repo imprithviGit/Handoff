@@ -40,47 +40,52 @@ export async function POST(req: NextRequest) {
 
   console.log("Dodo webhook:", type);
 
-  if (type === "payment.succeeded") {
-    const customerId     = data.customer?.customer_id as string ?? data.customer_id as string;
-    const subscriptionId = data.subscription_id as string | null ?? null;
-    // If there's a subscription_id it's a recurring plan (pro), otherwise lifetime one-time
-    const plan: Plan = subscriptionId ? "pro" : "lifetime";
-    await upsertCustomer({
-      dodo_customer_id:     customerId,
-      dodo_subscription_id: subscriptionId ?? undefined,
-      plan,
-      plan_period_end: null, // will be updated by subscription.active event
-    });
-  }
+  try {
+    if (type === "payment.succeeded") {
+      const customerId     = data.customer?.customer_id as string ?? data.customer_id as string;
+      const subscriptionId = data.subscription_id as string | null ?? null;
+      const plan: Plan     = subscriptionId ? "pro" : "lifetime";
+      await upsertCustomer({
+        dodo_customer_id:     customerId,
+        dodo_subscription_id: subscriptionId ?? undefined,
+        plan,
+        plan_period_end: null,
+      });
+    }
 
-  if (type === "subscription.active") {
-    const productId      = data.product_id as string;
-    const customerId     = data.customer?.customer_id as string ?? data.customer_id as string;
-    const subscriptionId = data.subscription_id as string;
-    const periodEnd      = data.next_billing_date as string | null ?? null;
-    await upsertCustomer({
-      dodo_customer_id:     customerId,
-      dodo_subscription_id: subscriptionId,
-      plan:                 planFromProductId(productId),
-      plan_period_end:      periodEnd,
-    });
-  }
+    if (type === "subscription.active") {
+      const productId      = data.product_id as string;
+      const customerId     = data.customer?.customer_id as string ?? data.customer_id as string;
+      const subscriptionId = data.subscription_id as string;
+      const periodEnd      = data.next_billing_date as string | null ?? null;
+      await upsertCustomer({
+        dodo_customer_id:     customerId,
+        dodo_subscription_id: subscriptionId,
+        plan:                 planFromProductId(productId),
+        plan_period_end:      periodEnd,
+      });
+    }
 
-  if (type === "subscription.renewed") {
-    const productId      = data.product_id as string;
-    const customerId     = data.customer?.customer_id as string ?? data.customer_id as string;
-    const subscriptionId = data.subscription_id as string;
-    const periodEnd      = data.next_billing_date as string | null ?? null;
-    await upsertCustomer({
-      dodo_customer_id:     customerId,
-      dodo_subscription_id: subscriptionId,
-      plan:                 planFromProductId(productId),
-      plan_period_end:      periodEnd,
-    });
-  }
+    if (type === "subscription.renewed") {
+      const productId      = data.product_id as string;
+      const customerId     = data.customer?.customer_id as string ?? data.customer_id as string;
+      const subscriptionId = data.subscription_id as string;
+      const periodEnd      = data.next_billing_date as string | null ?? null;
+      await upsertCustomer({
+        dodo_customer_id:     customerId,
+        dodo_subscription_id: subscriptionId,
+        plan:                 planFromProductId(productId),
+        plan_period_end:      periodEnd,
+      });
+    }
 
-  if (type === "subscription.cancelled" || type === "refund.succeeded") {
-    await upsertCustomer({ plan: "free", plan_period_end: null });
+    if (type === "subscription.cancelled" || type === "refund.succeeded") {
+      const customerId = data.customer?.customer_id as string ?? data.customer_id as string ?? null;
+      await upsertCustomer({ dodo_customer_id: customerId ?? undefined, plan: "free", plan_period_end: null });
+    }
+  } catch (err) {
+    console.error("Webhook processing failed:", err);
+    return NextResponse.json({ error: "Processing failed" }, { status: 500 });
   }
 
   return NextResponse.json({ received: true });

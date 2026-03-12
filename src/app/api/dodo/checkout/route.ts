@@ -8,14 +8,21 @@ const PRODUCT_MAP: Record<string, string | undefined> = {
 };
 
 export async function POST(req: NextRequest) {
-  const { plan } = await req.json();
+  const body = await req.json();
+  const { plan } = body;
+
+  if (typeof plan !== "string" || !plan) {
+    return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
+  }
 
   const productId = PRODUCT_MAP[plan];
   if (!productId) {
     return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
   }
 
-  const origin = req.headers.get("origin") ?? "https://handoff-eight.vercel.app";
+  const ALLOWED_ORIGINS = ["https://handoff-eight.vercel.app", "https://gethandoff.co", "http://localhost:3000"];
+  const requestOrigin = req.headers.get("origin") ?? "";
+  const origin = ALLOWED_ORIGINS.includes(requestOrigin) ? requestOrigin : "https://handoff-eight.vercel.app";
 
   try {
     const dodo = new DodoPayments({
