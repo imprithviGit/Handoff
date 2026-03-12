@@ -183,7 +183,7 @@ export default function RevenuePage() {
                 barSize={28}
                 barCategoryGap="30%"
                 margin={{ top: 4, right: 4, left: 0, bottom: 0 }}
-                onClick={(data) => { if (data?.activeTooltipIndex !== undefined) setSelectedMonth(data.activeTooltipIndex); }}
+                onClick={(data) => { if (data?.activeTooltipIndex != null) setSelectedMonth(data.activeTooltipIndex as number); }}
               >
                 <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#94a3b8" }} />
                 <YAxis hide />

@@ -32,11 +32,11 @@ export function useNotifications(projectIds: string[]) {
 
     // Deduplicate: keep only the first (latest) row per project_id
     const latestMsgMap  = new Map<string, { project_id: string; created_at: string }>();
-    for (const m of msgRes.data ?? []) {
+    for (const m of (msgRes.data ?? []) as { project_id: string; created_at: string }[]) {
       if (!latestMsgMap.has(m.project_id)) latestMsgMap.set(m.project_id, m);
     }
     const latestApprMap = new Map<string, { project_id: string; updated_at: string }>();
-    for (const a of apprRes.data ?? []) {
+    for (const a of (apprRes.data ?? []) as { project_id: string; updated_at: string }[]) {
       if (!latestApprMap.has(a.project_id)) latestApprMap.set(a.project_id, a);
     }
 

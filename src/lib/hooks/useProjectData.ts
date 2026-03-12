@@ -103,21 +103,22 @@ export function useClientPortal(token: string) {
         .eq("share_token", token)
         .single();
 
-      if (!proj) { setLoading(false); return; }
-      projectId = proj.id;
-      projectIdRef.current = proj.id;
+      const p = proj as { id: string; name: string; client_name: string | null; client_email: string | null; status: string; deadline: string | null; description: string | null; created_at: string | null } | null;
+      if (!p) { setLoading(false); return; }
+      projectId = p.id;
+      projectIdRef.current = p.id;
 
       const [msgRes, apprRes] = await Promise.all([
-        supabase.from("messages").select("*").eq("project_id", proj.id).order("created_at", { ascending: false }).limit(50),
-        supabase.from("approvals").select("*").eq("project_id", proj.id).order("created_at", { ascending: false }).limit(50),
+        supabase.from("messages").select("*").eq("project_id", p.id).order("created_at", { ascending: false }).limit(50),
+        supabase.from("approvals").select("*").eq("project_id", p.id).order("created_at", { ascending: false }).limit(50),
       ]);
 
-      const msgs = msgRes.data ?? [];
+      const msgs = (msgRes.data ?? []) as Message[];
       const freelancerName = msgs.find((m) => m.role === "freelancer")?.author_name ?? "Your freelancer";
-      setProject({ ...proj, freelancer_name: freelancerName });
+      setProject({ ...p, freelancer_name: freelancerName });
       setMessages(msgs);
       setHasMoreMessages(msgs.length === 50);
-      setApprovals(apprRes.data ?? []);
+      setApprovals((apprRes.data ?? []) as Approval[]);
       setLoading(false);
     }
 
