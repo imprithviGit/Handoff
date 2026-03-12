@@ -553,11 +553,11 @@ export default function Home() {
                 <div className="absolute -top-3 left-6 bg-emerald-400 text-black text-xs font-bold px-3 py-1 rounded-full">Limited offer</div>
                 <p className="text-xs font-bold text-white/25 uppercase tracking-widest mb-4">Lifetime</p>
                 <div className="flex items-end gap-2 mb-1">
-                  <p className="text-4xl font-extrabold text-white">$149</p>
+                  <p className="text-4xl font-extrabold text-white">$179</p>
                   <span className="text-white/20 line-through text-base mb-1">$216</span>
                 </div>
                 <p className="text-xs text-white/30 mb-1">One-time payment, yours forever</p>
-                <p className="text-xs text-emerald-400 font-semibold mb-7">Pays for itself in 18 months · Save $67</p>
+                <p className="text-xs text-emerald-400 font-semibold mb-7">Pays for itself in 22 months · Save $37</p>
                 <ul className="space-y-2.5 mb-8">
                   {["Everything in Pro", "Lifetime updates included", "No recurring fees, ever", "Lock in today's price", "Early access to new features", "Founding member badge"].map((item, i) => (
                     <li key={i} className="flex items-center gap-2.5 text-sm text-white/50">
