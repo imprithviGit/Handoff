@@ -7,7 +7,7 @@ import { useNotifications } from "@/lib/hooks/useNotifications";
 import { useAccess } from "@/lib/hooks/useAccess";
 import { createProject, updateProject } from "@/lib/actions/projects";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
-import { PaywallOverlay, HardPaywall, TrialBanner } from "@/components/Paywall";
+import { PaywallOverlay, HardPaywall } from "@/components/Paywall";
 
 // Generate last 7 months labels ending at current month
 function getLast7Months() {
@@ -177,7 +177,7 @@ export default function DashboardPage() {
   function copyLink(id: string) {
     const project = projects.find((p) => p.id === id);
     if (!project) return;
-    navigator.clipboard.writeText(`localhost:3000/p/${project.token}`);
+    navigator.clipboard.writeText(`${window.location.origin}/p/${project.share_token}`);
     setCopied(id);
     setTimeout(() => setCopied(null), 2000);
   }
@@ -215,18 +215,25 @@ export default function DashboardPage() {
           <h1 className="text-[15px] font-semibold text-gray-900 tracking-tight">Projects</h1>
           <p className="text-xs text-gray-400 mt-0.5">Manage your active client work</p>
         </div>
-        <button
-          onClick={() => { if (requireAccess()) setShowModal(true); }}
-          className="cursor-pointer flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-black font-semibold text-sm px-4 py-2 rounded-lg transition-colors shadow-sm"
-        >
-          <span className="text-base leading-none">+</span> New project
-        </button>
+        <div className="flex items-center gap-3">
+          {(isTrial || isExpired) && (
+            <button
+              onClick={() => setShowPaywallOverlay(true)}
+              className="cursor-pointer text-[12px] font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3.5 py-2 rounded-lg transition-colors"
+            >
+              Upgrade to Pro →
+            </button>
+          )}
+          <button
+            onClick={() => { if (requireAccess()) setShowModal(true); }}
+            className="cursor-pointer flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-black font-semibold text-sm px-4 py-2 rounded-lg transition-colors shadow-sm"
+          >
+            <span className="text-base leading-none">+</span> New project
+          </button>
+        </div>
       </div>
 
       <div className="px-8 py-7 max-w-7xl mx-auto">
-
-        {/* ── Trial / paywall banners ───────────────────────────────────── */}
-        {isTrial && daysLeft !== null && <TrialBanner daysLeft={daysLeft} />}
 
         {/* ── Stats row ────────────────────────────────────────────────── */}
         <div className="grid grid-cols-4 gap-3 mb-5">

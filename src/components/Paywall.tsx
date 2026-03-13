@@ -25,8 +25,8 @@ function PricingCards({ onClose, showClose }: { onClose: () => void; showClose: 
 
         <div className="p-7 pb-5 text-center border-b border-gray-100">
           <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-1">Upgrade to Pro</p>
-          <h2 className="text-xl font-extrabold text-gray-900">Your free trial has ended</h2>
-          <p className="text-[13px] text-gray-400 mt-1">Pick a plan to keep full access. Your data is safe — nothing is deleted.</p>
+          <h2 className="text-xl font-extrabold text-gray-900">Simple, transparent pricing</h2>
+          <p className="text-[13px] text-gray-400 mt-1">Pick a plan that works for you. Your data is safe — nothing is deleted.</p>
         </div>
 
         <div className="p-5 grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -131,26 +131,3 @@ export function HardPaywall({ onClose }: { onClose: () => void }) {
   return <PricingCards onClose={onClose} showClose={false} />;
 }
 
-// Trial banner — shown at top of dashboard during trial
-export function TrialBanner({ daysLeft }: { daysLeft: number }) {
-  const urgent = daysLeft <= 3;
-  return (
-    <div className={`mb-5 border rounded-xl px-5 py-3.5 flex items-center justify-between gap-4 ${urgent ? "bg-amber-50 border-amber-200" : "bg-emerald-50 border-emerald-200"}`}>
-      <div className="flex items-center gap-3">
-        <span className="text-base">{urgent ? "⚠️" : "🎉"}</span>
-        <p className="text-[13px] font-semibold text-gray-900">
-          {daysLeft === 1
-            ? "Last day of your free trial"
-            : `${daysLeft} days left in your free trial`}
-          <span className="font-normal text-gray-500 ml-1.5">— upgrade before it ends to keep full access.</span>
-        </p>
-      </div>
-      <button
-        onClick={() => startCheckout("pro_annual")}
-        className={`cursor-pointer shrink-0 text-[12px] font-bold px-4 py-2 rounded-lg transition-colors whitespace-nowrap ${urgent ? "bg-amber-400 hover:bg-amber-300 text-black" : "bg-emerald-500 hover:bg-emerald-400 text-black"}`}
-      >
-        Upgrade →
-      </button>
-    </div>
-  );
-}

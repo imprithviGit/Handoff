@@ -24,7 +24,7 @@ export function useNotifications(projectIds: string[]) {
       supabase
         .from("approvals")
         .select("project_id, updated_at")
-        .neq("status", "pending")
+        .eq("status", "pending")
         .in("project_id", projectIds)
         .order("updated_at", { ascending: false })
         .limit(projectIds.length * 2),
@@ -62,8 +62,6 @@ export function useNotifications(projectIds: string[]) {
   useEffect(() => {
     if (!projectIds.length) return;
     check();
-
-    const supabase = createClient();
 
     // Re-check whenever any client message is inserted or any approval status changes
     const msgChannel  = supabase.channel("dashboard-notifications-messages")

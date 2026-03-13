@@ -123,7 +123,7 @@ function FilePickerButton({ onFiles, onError }: { onFiles: (f: File[]) => void; 
 
 export default function ClientPortal({ params }: { params: Promise<{ id: string }> }) {
   const { id: token } = use(params);
-  const { project, messages, setMessages, approvals, setApprovals, loading, hasMoreMessages, loadingMoreMessages, loadMoreMessages } = useClientPortal(token);
+  const { project, messages, setMessages, approvals, setApprovals, loading, error, hasMoreMessages, loadingMoreMessages, loadMoreMessages } = useClientPortal(token);
 
   const [replyText, setReplyText]     = useState("");
   const [replyFiles, setReplyFiles]   = useState<File[]>([]);
@@ -146,6 +146,16 @@ export default function ClientPortal({ params }: { params: Promise<{ id: string 
     return (
       <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center">
         <div className="w-6 h-6 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (error === "error") {
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center text-center px-6" style={{ fontFamily: "var(--font-geist), sans-serif" }}>
+        <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center text-2xl mb-4">⚠️</div>
+        <h1 className="text-lg font-bold text-gray-900 mb-1">Something went wrong</h1>
+        <p className="text-[13px] text-gray-400 max-w-xs">Could not load this project. Try refreshing the page.</p>
       </div>
     );
   }

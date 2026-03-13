@@ -31,7 +31,7 @@ export async function getAccessStatus(): Promise<AccessStatus> {
   // Check if paid plan exists
   const { data: customer } = await service
     .from("customers")
-    .select("plan, plan_period_end")
+    .select("plan, plan_period_end, trial_started_at")
     .eq("owner_id", userId)
     .single();
 
@@ -39,20 +39,14 @@ export async function getAccessStatus(): Promise<AccessStatus> {
     return { status: "active" };
   }
 
-  // Check trial — based on first project creation date
-  const { data: firstProject } = await service
-    .from("projects")
-    .select("created_at")
-    .eq("owner_id", userId)
-    .order("created_at", { ascending: true })
-    .limit(1)
-    .single();
+  // Check trial — based on trial_started_at recorded on first project creation (immutable)
+  const trialStartDate = customer?.trial_started_at as string | null | undefined;
 
-  if (!firstProject) {
+  if (!trialStartDate) {
     return { status: "trial", daysLeft: 14 };
   }
 
-  const trialStart = new Date(firstProject.created_at);
+  const trialStart = new Date(trialStartDate);
   const now        = new Date();
   const daysPassed = Math.floor((now.getTime() - trialStart.getTime()) / (1000 * 60 * 60 * 24));
   const daysLeft   = 14 - daysPassed;

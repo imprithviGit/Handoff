@@ -85,11 +85,30 @@ export async function reviseApproval(
 }
 
 export async function deleteApproval(id: string) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Not authenticated" };
+  const { userId } = await (await import("@clerk/nextjs/server")).auth();
+  if (!userId) return { error: "Not authenticated" };
 
-  const { error } = await supabase
+  const service = createServiceClient();
+
+  // Verify the approval belongs to a project owned by this user
+  const { data: approval } = await service
+    .from("approvals")
+    .select("project_id")
+    .eq("id", id)
+    .single();
+
+  if (!approval) return { error: "Not found" };
+
+  const { data: project } = await service
+    .from("projects")
+    .select("id")
+    .eq("id", approval.project_id)
+    .eq("owner_id", userId)
+    .single();
+
+  if (!project) return { error: "Not authorized" };
+
+  const { error } = await service
     .from("approvals")
     .delete()
     .eq("id", id);

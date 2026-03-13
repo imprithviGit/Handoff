@@ -87,6 +87,7 @@ export function useClientPortal(token: string) {
   const [messages, setMessages]             = useState<Message[]>([]);
   const [approvals, setApprovals]           = useState<Approval[]>([]);
   const [loading, setLoading]               = useState(true);
+  const [error, setError]                   = useState<string | null>(null);
   const [hasMoreMessages, setHasMoreMessages]         = useState(false);
   const [loadingMoreMessages, setLoadingMoreMessages] = useState(false);
   const projectIdRef = useRef<string | null>(null);
@@ -97,14 +98,19 @@ export function useClientPortal(token: string) {
     let projectId: string | null = null;
 
     async function load() {
-      const { data: proj } = await supabase
+      const { data: proj, error: projError } = await supabase
         .from("projects")
         .select("id, name, client_name, client_email, status, deadline, description, created_at")
         .eq("share_token", token)
         .single();
 
-      const p = proj as { id: string; name: string; client_name: string | null; client_email: string | null; status: string; deadline: string | null; description: string | null; created_at: string | null } | null;
-      if (!p) { setLoading(false); return; }
+      if (projError || !proj) {
+        setError(projError?.code === "PGRST116" ? "not_found" : "error");
+        setLoading(false);
+        return;
+      }
+
+      const p = proj as { id: string; name: string; client_name: string | null; client_email: string | null; status: string; deadline: string | null; description: string | null; created_at: string | null };
       projectId = p.id;
       projectIdRef.current = p.id;
 
@@ -132,7 +138,7 @@ export function useClientPortal(token: string) {
       if (apprRes.data) setApprovals(apprRes.data);
     }
 
-    load().then(() => {
+    load().catch(() => { setError("error"); setLoading(false); }).then(() => {
       if (!projectId) return;
 
       // Realtime subscriptions — fire once Realtime is enabled on the tables
@@ -181,5 +187,5 @@ export function useClientPortal(token: string) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { project, messages, setMessages, approvals, setApprovals, loading, hasMoreMessages, loadingMoreMessages, loadMoreMessages };
+  return { project, messages, setMessages, approvals, setApprovals, loading, error, hasMoreMessages, loadingMoreMessages, loadMoreMessages };
 }

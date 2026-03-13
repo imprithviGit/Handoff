@@ -53,6 +53,17 @@ export async function createProject(values: {
     .select()
     .single();
 
+  if (!error) {
+    // Record trial start once — ON CONFLICT DO NOTHING so it's never overwritten
+    // This prevents users from resetting their trial by deleting + recreating projects
+    await supabase
+      .from("customers")
+      .upsert(
+        { owner_id: ownerId, plan: "free", trial_started_at: new Date().toISOString() },
+        { onConflict: "owner_id", ignoreDuplicates: true }
+      );
+  }
+
   revalidatePath("/dashboard");
   return { data, error: error?.message ?? null };
 }
