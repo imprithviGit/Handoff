@@ -98,12 +98,12 @@ export default function Home() {
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
-          <button className="cursor-pointer bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-sm px-7 py-3.5 rounded-full transition-colors shadow-md shadow-emerald-100">
+          <a href="/signup" className="cursor-pointer bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-sm px-7 py-3.5 rounded-full transition-colors shadow-md shadow-emerald-100">
             Start for free ↗
-          </button>
-          <button className="cursor-pointer text-sm font-semibold text-gray-500 hover:text-gray-900 px-7 py-3.5 rounded-full border border-gray-200 hover:border-gray-400 transition-all">
+          </a>
+          <a href="/p/demo" className="cursor-pointer text-sm font-semibold text-gray-500 hover:text-gray-900 px-7 py-3.5 rounded-full border border-gray-200 hover:border-gray-400 transition-all">
             See a live example
-          </button>
+          </a>
         </div>
 
         <div className="flex items-center gap-6 pt-6 border-t border-gray-100">
@@ -630,9 +630,9 @@ export default function Home() {
           <p className="text-white/40 text-sm mb-7 max-w-sm mx-auto leading-relaxed">
             One clean link. Everything your client needs. Cheaper than HoneyBook, Dubsado, and Copilot — combined.
           </p>
-          <button className="cursor-pointer inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 transition-colors text-black font-semibold text-sm px-8 py-3.5 rounded-full">
+          <a href="/signup" className="cursor-pointer inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 transition-colors text-black font-semibold text-sm px-8 py-3.5 rounded-full">
             Create your first project ↗
-          </button>
+          </a>
           <p className="mt-4 text-xs text-white/20">14-day free trial. No credit card needed.</p>
         </div>
       </section>
