@@ -9,7 +9,6 @@ export default function SignupPage() {
         </span>
       </div>
       <SignUp
-        afterSignUpUrl="/onboarding"
         appearance={{
           elements: {
             rootBox: "w-full flex justify-center",

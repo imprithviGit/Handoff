@@ -9,8 +9,6 @@ export default function LoginCatchAll() {
         </span>
       </div>
       <SignIn
-        afterSignUpUrl="/onboarding"
-        afterSignInUrl="/dashboard"
         appearance={{
           elements: {
             rootBox: "w-full flex justify-center",
