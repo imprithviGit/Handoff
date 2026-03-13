@@ -4,13 +4,13 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 const HARDCODED_USER = {
-  id:    "test-user-id",
-  email: "test@gmail.com",
-  name:  "Test",
+  id:    "00000000-0000-0000-0000-000000000001",
+  email: "adminsybau@gmail.com",
+  name:  "Admin",
 };
 
 export async function signIn(email: string, password: string) {
-  if (email === HARDCODED_USER.email && password.length > 0) {
+  if (email === HARDCODED_USER.email && password === "123456") {
     const cookieStore = await cookies();
     cookieStore.set("auth_session", "authenticated", { path: "/", httpOnly: true });
     return { error: null };

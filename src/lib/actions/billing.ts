@@ -22,6 +22,9 @@ export async function getCustomerPlan(): Promise<Plan> {
 }
 
 export async function getAccessStatus(): Promise<AccessStatus> {
+  // Admin account always has full access
+  return { status: "active" };
+
   const service = createServiceClient();
 
   // Check if paid plan exists
