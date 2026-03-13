@@ -124,6 +124,20 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── DEMO VIDEO ── */}
+      <section className="max-w-4xl mx-auto px-8 pb-16">
+        <div className="rounded-2xl overflow-hidden border border-gray-200 shadow-2xl shadow-gray-200/80">
+          <video
+            src="/handoff-intro.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full block"
+          />
+        </div>
+      </section>
+
       {/* ── LOGOS ── */}
       <section className="border-y border-gray-100 bg-gray-50/60 py-5">
         <div className="max-w-5xl mx-auto px-8 flex flex-wrap items-center justify-center gap-x-10 gap-y-2">
