@@ -8,7 +8,16 @@ export function useAccess() {
   const [access, setAccess] = useState<AccessStatus | null>(null);
 
   useEffect(() => {
-    getAccessStatus().then(setAccess);
+    console.log("[useAccess] calling getAccessStatus...");
+    getAccessStatus()
+      .then((result) => {
+        console.log("[useAccess] result:", result);
+        setAccess(result);
+      })
+      .catch((err) => {
+        console.error("[useAccess] getAccessStatus failed:", err);
+        setAccess({ status: "trial", daysLeft: 14 });
+      });
   }, []);
 
   const isExpired  = access?.status === "expired";
