@@ -49,7 +49,10 @@ export default function OnboardingPage() {
   async function handleNameNext() {
     if (!name.trim() || !country) return;
     setSaving(true);
-    await user?.update({ firstName: name.trim(), unsafeMetadata: { country } });
+    const parts = name.trim().split(" ");
+    const firstName = parts[0];
+    const lastName  = parts.slice(1).join(" ") || "";
+    await user?.update({ firstName, lastName, unsafeMetadata: { country } });
     setSaving(false);
     setStep(2);
   }
