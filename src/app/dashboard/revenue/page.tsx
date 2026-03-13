@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, ReferenceLine } from "recharts";
 import { useProjects } from "@/lib/hooks/useProjects";
+import { useUser } from "@clerk/nextjs";
 
 const MONTH_LABELS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
@@ -16,6 +17,7 @@ function getLast7Months() {
 
 export default function RevenuePage() {
   const { projects, loading } = useProjects();
+  const { user } = useUser();
   const [target, setTarget]         = useState<number>(0);
   const [targetInput, setTargetInput] = useState<string>("0");
   const [editing, setEditing]       = useState(false);
@@ -66,11 +68,10 @@ export default function RevenuePage() {
     <div className="min-h-screen bg-[#F8FAFC]" style={{ fontFamily: "var(--font-geist), sans-serif" }}>
 
       {/* Top bar */}
-      <div className="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
-        <div>
-          <h1 className="text-[15px] font-semibold text-gray-900 tracking-tight">Revenue</h1>
-          <p className="text-xs text-gray-400 mt-0.5">Track earnings and set your monthly target</p>
-        </div>
+      <div className="bg-white border-b border-gray-100 px-8 py-4 sticky top-0 z-10">
+        <h1 className="text-xl font-extrabold text-gray-900 tracking-tight" style={{ fontFamily: "var(--font-syne), sans-serif" }}>
+          Hey <span className="text-emerald-500">{user?.firstName ?? "there"}</span>
+        </h1>
       </div>
 
       <div className="px-8 py-7 max-w-5xl mx-auto space-y-5">

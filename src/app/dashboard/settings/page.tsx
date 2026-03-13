@@ -4,6 +4,20 @@ import { useUser, useClerk } from "@clerk/nextjs";
 import { useAccess } from "@/lib/hooks/useAccess";
 import { useState } from "react";
 
+const COUNTRIES = [
+  "India", "United States", "United Kingdom", "Canada", "Australia",
+  "Germany", "France", "Netherlands", "Spain", "Italy", "Portugal",
+  "Sweden", "Norway", "Denmark", "Finland", "Switzerland", "Austria",
+  "Belgium", "Poland", "Czech Republic", "Romania", "Ukraine",
+  "Brazil", "Mexico", "Argentina", "Colombia", "Chile",
+  "Nigeria", "South Africa", "Kenya", "Ghana",
+  "UAE", "Saudi Arabia", "Israel", "Turkey",
+  "Singapore", "Malaysia", "Indonesia", "Philippines", "Thailand",
+  "Japan", "South Korea", "China", "Hong Kong", "Taiwan",
+  "New Zealand", "Pakistan", "Bangladesh", "Sri Lanka",
+  "Other",
+];
+
 async function startCheckout(plan: string) {
   const res = await fetch("/api/dodo/checkout", {
     method: "POST",
@@ -18,7 +32,29 @@ export default function SettingsPage() {
   const { user } = useUser();
   const { signOut } = useClerk();
   const { isActive, isTrial, isExpired, daysLeft } = useAccess();
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied]         = useState(false);
+  const [editingProfile, setEditingProfile] = useState(false);
+  const [profileName, setProfileName]       = useState("");
+  const [profileCountry, setProfileCountry] = useState("");
+  const [savingProfile, setSavingProfile]   = useState(false);
+
+  function startEditProfile() {
+    const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ");
+    setProfileName(fullName);
+    setProfileCountry((user?.unsafeMetadata?.country as string) ?? "");
+    setEditingProfile(true);
+  }
+
+  async function saveProfile() {
+    if (!profileName.trim()) return;
+    setSavingProfile(true);
+    const parts = profileName.trim().split(" ");
+    const firstName = parts[0];
+    const lastName  = parts.slice(1).join(" ") || undefined;
+    await user?.update({ firstName, lastName, unsafeMetadata: { country: profileCountry } });
+    setSavingProfile(false);
+    setEditingProfile(false);
+  }
 
   const referralUrl = "https://gethandoff.co";
 
@@ -36,38 +72,86 @@ export default function SettingsPage() {
 
       {/* Top bar */}
       <div className="bg-white border-b border-gray-100 px-8 py-4 sticky top-0 z-10 shadow-[0_1px_0_0_#f1f5f9]">
-        <h1 className="text-[15px] font-semibold text-gray-900 tracking-tight">Settings</h1>
-        <p className="text-xs text-gray-400 mt-0.5">Manage your account and preferences</p>
+        <h1 className="text-xl font-extrabold text-gray-900 tracking-tight" style={{ fontFamily: "var(--font-syne), sans-serif" }}>
+          Hey <span className="text-emerald-500">{user?.firstName ?? "there"}</span>
+        </h1>
       </div>
 
       <div className="max-w-2xl mx-auto px-8 py-8 space-y-5">
 
         {/* ── Profile ── */}
         <section className="bg-white rounded-2xl border border-gray-100 shadow-[0_1px_4px_rgba(0,0,0,0.05)] overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100">
+          <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
             <h2 className="text-[13px] font-semibold text-gray-900">Profile</h2>
+            {!editingProfile && (
+              <button
+                onClick={startEditProfile}
+                className="cursor-pointer text-[12px] font-semibold text-gray-500 hover:text-gray-900 border border-gray-200 hover:border-gray-300 px-3.5 py-1.5 rounded-lg transition-all"
+              >
+                Edit
+              </button>
+            )}
           </div>
-          <div className="px-6 py-5 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center text-lg font-bold text-emerald-700 shrink-0">
-              {(user?.firstName?.[0] ?? user?.emailAddresses[0]?.emailAddress?.[0] ?? "A").toUpperCase()}
+
+          {!editingProfile ? (
+            <div className="px-6 py-5 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center text-lg font-bold text-emerald-700 shrink-0">
+                {(user?.firstName?.[0] ?? user?.emailAddresses[0]?.emailAddress?.[0] ?? "A").toUpperCase()}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-gray-900">
+                  {[user?.firstName, user?.lastName].filter(Boolean).join(" ") || "—"}
+                </p>
+                <p className="text-xs text-gray-400 mt-0.5">{user?.emailAddresses[0]?.emailAddress ?? "—"}</p>
+                {user?.unsafeMetadata?.country && (
+                  <p className="text-xs text-gray-400 mt-0.5">{user.unsafeMetadata.country as string}</p>
+                )}
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-900">
-                {user?.firstName && user?.lastName
-                  ? `${user.firstName} ${user.lastName}`
-                  : user?.firstName ?? "—"}
-              </p>
-              <p className="text-xs text-gray-400 mt-0.5">{user?.emailAddresses[0]?.emailAddress ?? "—"}</p>
+          ) : (
+            <div className="px-6 py-5 space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 mb-1.5">Full name</label>
+                <input
+                  autoFocus
+                  type="text"
+                  value={profileName}
+                  onChange={(e) => setProfileName(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && saveProfile()}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400 transition-colors"
+                  placeholder="Your full name"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 mb-1.5">Country</label>
+                <select
+                  value={profileCountry}
+                  onChange={(e) => setProfileCountry(e.target.value)}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400 transition-colors bg-white cursor-pointer"
+                >
+                  <option value="">Select country</option>
+                  {COUNTRIES.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex gap-2 pt-1">
+                <button
+                  onClick={saveProfile}
+                  disabled={!profileName.trim() || savingProfile}
+                  className="cursor-pointer bg-gray-900 hover:bg-gray-800 disabled:opacity-40 text-white text-[12px] font-semibold px-4 py-2 rounded-lg transition-colors"
+                >
+                  {savingProfile ? "Saving…" : "Save changes"}
+                </button>
+                <button
+                  onClick={() => setEditingProfile(false)}
+                  className="cursor-pointer text-[12px] font-medium text-gray-400 hover:text-gray-700 px-4 py-2 rounded-lg transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
-            <a
-              href="https://accounts.clerk.com/user"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="cursor-pointer text-[12px] font-semibold text-gray-500 hover:text-gray-900 border border-gray-200 hover:border-gray-300 px-3.5 py-2 rounded-lg transition-all"
-            >
-              Edit profile ↗
-            </a>
-          </div>
+          )}
         </section>
 
         {/* ── Plan & Billing ── */}

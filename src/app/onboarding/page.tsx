@@ -106,6 +106,9 @@ export default function OnboardingPage() {
             >
               {saving ? "Saving…" : "Continue →"}
             </button>
+            <p className="text-center text-[12px] text-gray-400 mt-3">
+              You can change this anytime in Settings.
+            </p>
           </div>
         </div>
       )}

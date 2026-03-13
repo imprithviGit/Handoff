@@ -8,6 +8,7 @@ import { useAccess } from "@/lib/hooks/useAccess";
 import { createProject, updateProject } from "@/lib/actions/projects";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { PaywallOverlay, HardPaywall } from "@/components/Paywall";
+import { useUser } from "@clerk/nextjs";
 
 // Generate last 7 months labels ending at current month
 function getLast7Months() {
@@ -110,6 +111,7 @@ export default function DashboardPage() {
   const { projects: dbProjects, loading, refetch } = useProjects();
   const { unread } = useNotifications(dbProjects.map((p) => p.id));
   const { isExpired, isTrial, daysLeft } = useAccess();
+  const { user } = useUser();
   const [showPaywallOverlay, setShowPaywallOverlay] = useState(false);
   const [showHardPaywall, setShowHardPaywall]       = useState(false);
 
@@ -211,10 +213,9 @@ export default function DashboardPage() {
 
       {/* Top bar */}
       <div className="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10 shadow-[0_1px_0_0_#f1f5f9]">
-        <div>
-          <h1 className="text-[15px] font-semibold text-gray-900 tracking-tight">Projects</h1>
-          <p className="text-xs text-gray-400 mt-0.5">Manage your active client work</p>
-        </div>
+        <h1 className="text-xl font-extrabold text-gray-900 tracking-tight" style={{ fontFamily: "var(--font-syne), sans-serif" }}>
+          Hey <span className="text-emerald-500">{user?.firstName ?? "there"}</span>
+        </h1>
         <div className="flex items-center gap-3">
           {(isTrial || isExpired) && (
             <button
