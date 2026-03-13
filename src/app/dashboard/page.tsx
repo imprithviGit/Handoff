@@ -4,8 +4,10 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useProjects } from "@/lib/hooks/useProjects";
 import { useNotifications } from "@/lib/hooks/useNotifications";
+import { useAccess } from "@/lib/hooks/useAccess";
 import { createProject, updateProject } from "@/lib/actions/projects";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import { PaywallOverlay, HardPaywall, TrialBanner } from "@/components/Paywall";
 
 // Generate last 7 months labels ending at current month
 function getLast7Months() {
@@ -107,6 +109,19 @@ async function startCheckout(plan: string) {
 export default function DashboardPage() {
   const { projects: dbProjects, loading, refetch } = useProjects();
   const { unread } = useNotifications(dbProjects.map((p) => p.id));
+  const { isExpired, isTrial, daysLeft } = useAccess();
+  const [showPaywallOverlay, setShowPaywallOverlay] = useState(false);
+  const [showHardPaywall, setShowHardPaywall]       = useState(false);
+
+  // Show soft paywall overlay on first open when expired
+  useEffect(() => {
+    if (isExpired) setShowPaywallOverlay(true);
+  }, [isExpired]);
+
+  function requireAccess(): boolean {
+    if (isExpired) { setShowHardPaywall(true); return false; }
+    return true;
+  }
   const [statusOverrides, setStatusOverrides] = useState<Record<string, Status>>({});
   const projects = dbProjects.map((p) => ({
     ...p,
@@ -191,6 +206,8 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]" style={{ fontFamily: "var(--font-geist), sans-serif" }}>
+      {showPaywallOverlay && <PaywallOverlay onDismiss={() => setShowPaywallOverlay(false)} />}
+      {showHardPaywall    && <HardPaywall    onClose={() => setShowHardPaywall(false)} />}
 
       {/* Top bar */}
       <div className="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10 shadow-[0_1px_0_0_#f1f5f9]">
@@ -199,35 +216,17 @@ export default function DashboardPage() {
           <p className="text-xs text-gray-400 mt-0.5">Manage your active client work</p>
         </div>
         <button
-          onClick={() => dbProjects.length >= 1 ? startCheckout("pro_annual") : setShowModal(true)}
+          onClick={() => { if (requireAccess()) setShowModal(true); }}
           className="cursor-pointer flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-black font-semibold text-sm px-4 py-2 rounded-lg transition-colors shadow-sm"
         >
-          <span className="text-base leading-none">+</span> {dbProjects.length >= 1 ? "Upgrade for more" : "New project"}
+          <span className="text-base leading-none">+</span> New project
         </button>
       </div>
 
       <div className="px-8 py-7 max-w-7xl mx-auto">
 
-        {/* ── Free plan upgrade banner ──────────────────────────────────── */}
-        {dbProjects.length >= 1 && (
-          <div className="mb-5 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl px-5 py-4 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
-                <span className="text-sm">⚡</span>
-              </div>
-              <div>
-                <p className="text-[13px] font-semibold text-gray-900">You&apos;re on the free plan — 1 project limit</p>
-                <p className="text-[11px] text-gray-500 mt-0.5">Upgrade to Pro for unlimited projects, custom branding, and 1GB storage.</p>
-              </div>
-            </div>
-            <button
-              onClick={() => startCheckout("pro_annual")}
-              className="cursor-pointer shrink-0 bg-emerald-500 hover:bg-emerald-400 text-black text-[12px] font-bold px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
-            >
-              Upgrade to Pro →
-            </button>
-          </div>
-        )}
+        {/* ── Trial / paywall banners ───────────────────────────────────── */}
+        {isTrial && daysLeft !== null && <TrialBanner daysLeft={daysLeft} />}
 
         {/* ── Stats row ────────────────────────────────────────────────── */}
         <div className="grid grid-cols-4 gap-3 mb-5">

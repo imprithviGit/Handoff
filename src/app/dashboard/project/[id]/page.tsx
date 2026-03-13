@@ -7,6 +7,8 @@ import { useMessages, useApprovals } from "@/lib/hooks/useProjectData";
 import { postMessage, uploadFile } from "@/lib/actions/messages";
 import { createApproval, reviseApproval } from "@/lib/actions/approvals";
 import { markMessagesRead, markApprovalsRead } from "@/lib/hooks/useNotifications";
+import { useAccess } from "@/lib/hooks/useAccess";
+import { HardPaywall } from "@/components/Paywall";
 import type { Message, Approval, FileAttachment } from "@/lib/supabase/types";
 
 // ── types ─────────────────────────────────────────────────────────────────────
@@ -137,6 +139,14 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
   const { messages, loading: messagesLoading, refetch: refetchMessages, hasMore: hasMoreMessages, loadingMore: loadingMoreMessages, loadMore: loadMoreMessages } = useMessages(id);
   const { approvals, loading: approvalsLoading, refetch: refetchApprovals } = useApprovals(id);
 
+  const { isExpired } = useAccess();
+  const [showHardPaywall, setShowHardPaywall] = useState(false);
+
+  function requireAccess(): boolean {
+    if (isExpired) { setShowHardPaywall(true); return false; }
+    return true;
+  }
+
   const [tab, setTab]                       = useState<"updates" | "approvals" | "files" | "details">("updates");
   const [readMessages, setReadMessages]     = useState<string | null>(null);
   const [readApprovals, setReadApprovals]   = useState<string | null>(null);
@@ -208,7 +218,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
   }
 
   async function postUpdate() {
-    if (!canPost || submitting) return;
+    if (!requireAccess() || !canPost || submitting) return;
     setSubmitting(true);
     let uploadedFiles: FileAttachment[] = [];
     if (updateFiles.length > 0) {
@@ -225,7 +235,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
   }
 
   async function requestApproval() {
-    if (!newApproval.title.trim() || approvalSubmitting) return;
+    if (!requireAccess() || !newApproval.title.trim() || approvalSubmitting) return;
     setApprovalSubmitting(true);
     let uploadedFiles: FileAttachment[] = [];
     if (approvalFiles.length > 0) {
@@ -256,6 +266,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]" style={{ fontFamily: "var(--font-geist), sans-serif" }}>
+      {showHardPaywall && <HardPaywall onClose={() => setShowHardPaywall(false)} />}
 
       {/* Top bar */}
       <div className="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
@@ -431,7 +442,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
                 <p className="text-[13px] font-semibold text-gray-900">Approval requests</p>
                 <p className="text-[11px] text-gray-400 mt-0.5">Send a sign-off request to your client. They approve or flag changes on their portal.</p>
               </div>
-              <button onClick={() => setShowApprovalForm((v) => !v)}
+              <button onClick={() => { if (requireAccess()) setShowApprovalForm((v) => !v); }}
                 className="cursor-pointer text-[12px] font-semibold px-4 py-2 rounded-lg bg-gray-900 hover:bg-gray-700 text-white transition-colors shrink-0 ml-6"
               >
                 + New request
