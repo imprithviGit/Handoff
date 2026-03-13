@@ -112,13 +112,14 @@ export default function Home() {
 
       {/* ── DEMO VIDEO ── */}
       <section className="max-w-4xl mx-auto px-8 pb-16">
-        <div className="rounded-2xl overflow-hidden border border-gray-200 shadow-2xl shadow-gray-200/80">
+        <div className="rounded-2xl overflow-hidden border border-gray-200 shadow-2xl shadow-gray-200/80 bg-gray-100">
           <video
             src="/handoff-intro.mp4"
             autoPlay
             muted
             loop
             playsInline
+            preload="auto"
             className="w-full block"
           />
         </div>

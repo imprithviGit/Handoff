@@ -38,13 +38,14 @@ export default function OnboardingPage() {
             </div>
 
             {/* Video — large */}
-            <div className="w-full rounded-2xl overflow-hidden border border-gray-200 shadow-[0_8px_40px_rgba(0,0,0,0.10)] mb-8">
+            <div className="w-full rounded-2xl overflow-hidden border border-gray-200 shadow-[0_8px_40px_rgba(0,0,0,0.10)] mb-8 bg-gray-100">
               <video
                 src="/handoff-intro.mp4"
                 autoPlay
                 muted
                 loop
                 playsInline
+                preload="auto"
                 className="w-full block"
               />
             </div>
