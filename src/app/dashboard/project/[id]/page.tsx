@@ -6,6 +6,8 @@ import { useProjectDetail } from "@/lib/hooks/useProjects";
 import { useMessages, useApprovals } from "@/lib/hooks/useProjectData";
 import { postMessage, uploadFile } from "@/lib/actions/messages";
 import { createApproval, reviseApproval } from "@/lib/actions/approvals";
+import { deleteProject } from "@/lib/actions/projects";
+import { useRouter } from "next/navigation";
 import { markMessagesRead, markApprovalsRead } from "@/lib/hooks/useNotifications";
 import { useAccess } from "@/lib/hooks/useAccess";
 import { HardPaywall } from "@/components/Paywall";
@@ -135,6 +137,7 @@ function FilePickerButton({ onFiles, onError }: { onFiles: (f: File[]) => void; 
 
 export default function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const router = useRouter();
   const { project, loading } = useProjectDetail(id);
   const { messages, loading: messagesLoading, refetch: refetchMessages, hasMore: hasMoreMessages, loadingMore: loadingMoreMessages, loadMore: loadMoreMessages } = useMessages(id);
   const { approvals, loading: approvalsLoading, refetch: refetchApprovals } = useApprovals(id);
@@ -171,6 +174,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
   const [approvalFileError, setApprovalFileError] = useState<string | null>(null);
   const [approvalSubmitting, setApprovalSubmitting] = useState(false);
   const [copied, setCopied]                 = useState(false);
+  const [deleting, setDeleting]             = useState(false);
   // Revise & resend state
   const [revisingId, setRevisingId]         = useState<string | null>(null);
   const [reviseForm, setReviseForm]         = useState({ title: "", description: "" });
@@ -198,6 +202,13 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
 
   const hasUnreadMessages  = messages.some((m: Message) => m.role === "client" && (!readMessages  || m.created_at  > readMessages));
   const hasUnreadApprovals = approvals.some((a: Approval) => a.status !== "pending" && (!readApprovals || a.updated_at > readApprovals));
+
+  async function handleDelete() {
+    if (!confirm(`Delete "${project?.name}"? This cannot be undone.`)) return;
+    setDeleting(true);
+    await deleteProject(id);
+    router.push("/dashboard");
+  }
 
   function switchTab(t: "updates" | "approvals" | "files" | "details") {
     setTab(t);
@@ -703,7 +714,13 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
               <textarea defaultValue={project.description ?? ""} rows={3} className="w-full border border-gray-200 rounded-lg px-3.5 py-3 text-[13px] text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400 transition-all resize-none" />
             </div>
             <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-              <button className="cursor-pointer text-[13px] font-medium text-red-400 hover:text-red-600 transition-colors">Delete project</button>
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="cursor-pointer text-[13px] font-medium text-red-400 hover:text-red-600 disabled:opacity-50 transition-colors"
+              >
+                {deleting ? "Deleting…" : "Delete project"}
+              </button>
               <button className="cursor-pointer bg-gray-900 hover:bg-gray-800 text-white text-[13px] font-semibold px-5 py-2.5 rounded-lg transition-colors">Save changes</button>
             </div>
           </div>
