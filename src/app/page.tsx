@@ -19,12 +19,6 @@ const steps = [
   { n: "04", title: "Close the loop", description: "Client approves. You move on." },
 ];
 
-const testimonials = [
-  { name: "Aryan Mehta", role: "UI/UX Designer, Mumbai", initial: "A", color: "bg-emerald-100 text-emerald-700", text: "My clients used to ghost me after I sent a Google Drive link. Since Handoff, I've closed 3 new projects from referrals alone." },
-  { name: "Jake Morrison", role: "Freelance Developer, Austin TX", initial: "J", color: "bg-sky-100 text-sky-700", text: "I was using Notion pages and random Dropbox links to hand off work. Handoff replaced all of that. Clients actually respond faster now." },
-  { name: "Sofia Bianchi", role: "Brand Designer, Milan", initial: "S", color: "bg-pink-100 text-pink-700", text: "European clients expect things to look polished. Handoff gives me that credibility instantly. The custom branding feature is worth it alone." },
-  { name: "Tom Hargreaves", role: "Copywriter, London", initial: "T", color: "bg-amber-100 text-amber-700", text: "Sending a Handoff link instead of a Google Doc made me look 10x more serious. Signed two new retainers in the same month I switched." },
-];
 
 async function startCheckout(plan: string) {
   const res = await fetch("/api/dodo/checkout", {
@@ -112,11 +106,6 @@ export default function Home() {
           <div className="text-center">
             <p className="text-2xl font-extrabold text-gray-900">18k+</p>
             <p className="text-xs text-gray-400 mt-0.5">Client portals created</p>
-          </div>
-          <div className="w-px h-8 bg-gray-200" />
-          <div className="text-center">
-            <p className="text-2xl font-extrabold text-gray-900">4.9 ★</p>
-            <p className="text-xs text-gray-400 mt-0.5">Average rating</p>
           </div>
         </div>
       </section>
@@ -448,29 +437,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ── */}
-      <section className="bg-gray-50 py-20">
-        <div className="max-w-7xl mx-auto px-8">
-          <div className="mb-12">
-            <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-2">Testimonials</p>
-            <h2 className="text-2xl font-bold text-gray-900">Freelancers who switched</h2>
-          </div>
-          <div className="grid md:grid-cols-4 gap-4">
-            {testimonials.map((t, i) => (
-              <div key={i} className="bg-white border border-gray-200 hover:border-emerald-200 hover:shadow-md hover:shadow-emerald-50 rounded-2xl p-6 flex flex-col justify-between gap-5 transition-all cursor-default">
-                <p className="text-sm text-gray-600 leading-relaxed">"{t.text}"</p>
-                <div className="flex items-center gap-3">
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold ${t.color}`}>{t.initial}</div>
-                  <div>
-                    <p className="text-sm font-semibold text-gray-900">{t.name}</p>
-                    <p className="text-xs text-gray-400">{t.role}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ── PRICING ── */}
       <section id="pricing" className="py-20">
