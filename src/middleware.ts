@@ -3,13 +3,14 @@ import { NextResponse } from "next/server";
 
 const isProtectedRoute = createRouteMatcher(["/dashboard(.*)", "/onboarding"]);
 const isAuthRoute = createRouteMatcher(["/login", "/signup"]);
+const isRootRoute = createRouteMatcher(["/"]);
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth();
 
   if (isProtectedRoute(req)) await auth.protect();
 
-  if (isAuthRoute(req) && userId) {
+  if (userId && (isAuthRoute(req) || isRootRoute(req))) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 });
