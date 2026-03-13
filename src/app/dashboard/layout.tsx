@@ -91,12 +91,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Logo */}
         <div className="h-14 flex items-center border-b border-gray-100 px-3.5">
           <Link href="/" className="flex items-center gap-2.5 cursor-pointer min-w-0">
-            <span
-              className={`text-[16px] font-extrabold tracking-tight text-gray-900 whitespace-nowrap transition-all duration-150 ${expanded ? "opacity-100 delay-75" : "opacity-0 w-0"}`}
-              style={{ fontFamily: "var(--font-syne), sans-serif" }}
-            >
-              Hand<span className="text-emerald-500">off</span>
-            </span>
+            <div className={`flex flex-col transition-all duration-150 ${expanded ? "opacity-100 delay-75" : "opacity-0 w-0 overflow-hidden"}`}>
+              <span
+                className="text-[16px] font-extrabold tracking-tight text-gray-900 whitespace-nowrap leading-tight"
+                style={{ fontFamily: "var(--font-syne), sans-serif" }}
+              >
+                Hand<span className="text-emerald-500">off</span>
+              </span>
+              {user?.firstName && (
+                <span
+                  className="text-[11px] font-bold text-gray-400 whitespace-nowrap leading-tight"
+                  style={{ fontFamily: "var(--font-syne), sans-serif" }}
+                >
+                  Hey {user.firstName}
+                </span>
+              )}
+            </div>
           </Link>
         </div>
 

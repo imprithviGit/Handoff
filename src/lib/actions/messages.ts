@@ -19,15 +19,21 @@ export async function getMessages(projectId: string) {
   return { data, error: error?.message ?? null };
 }
 
-// Freelancer posts an update — uses service client until real auth is wired
+// Freelancer posts an update
 export async function postMessage(projectId: string, body: string, files: FileAttachment[]) {
   if (await isRateLimited("messages", projectId, 100, HOUR))
     return { data: null, error: "Too many updates — slow down a bit." };
 
+  const { userId } = await (await import("@clerk/nextjs/server")).auth();
+  if (!userId) return { data: null, error: "Not authenticated" };
+
+  const clerkUser = await (await (await import("@clerk/nextjs/server")).clerkClient()).users.getUser(userId);
+  const authorName = clerkUser.firstName ?? clerkUser.emailAddresses[0]?.emailAddress ?? "Freelancer";
+
   const service = createServiceClient();
   const { data, error } = await service
     .from("messages")
-    .insert({ project_id: projectId, role: "freelancer", author_name: "Test", body, files })
+    .insert({ project_id: projectId, role: "freelancer", author_name: authorName, body, files })
     .select()
     .single();
 
