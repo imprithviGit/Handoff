@@ -97,7 +97,15 @@ export default function SettingsPage() {
             </div>
 
             {!isActive && (
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
+                <button
+                  onClick={() => startCheckout("pro_monthly")}
+                  className="cursor-pointer border border-gray-200 hover:border-emerald-300 rounded-xl p-4 text-left transition-all hover:shadow-sm group"
+                >
+                  <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Pro Monthly</p>
+                  <p className="text-xl font-extrabold text-gray-900 group-hover:text-emerald-600 transition-colors">$11<span className="text-sm font-normal text-gray-400">/mo</span></p>
+                  <p className="text-[11px] text-gray-400 mt-0.5">Billed monthly · Cancel anytime</p>
+                </button>
                 <button
                   onClick={() => startCheckout("pro_annual")}
                   className="cursor-pointer border border-gray-200 hover:border-emerald-300 rounded-xl p-4 text-left transition-all hover:shadow-sm group"
