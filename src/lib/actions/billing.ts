@@ -1,8 +1,7 @@
 "use server";
 
 import { createServiceClient } from "@/lib/supabase/server";
-
-const OWNER_ID = "00000000-0000-0000-0000-000000000001";
+import { auth } from "@clerk/nextjs/server";
 
 export type Plan = "free" | "pro" | "lifetime";
 
@@ -12,26 +11,28 @@ export type AccessStatus =
   | { status: "expired" }; // trial over, no paid plan
 
 export async function getCustomerPlan(): Promise<Plan> {
+  const { userId } = await auth();
+  if (!userId) return "free";
   const service = createServiceClient();
   const { data } = await service
     .from("customers")
     .select("plan")
-    .eq("owner_id", OWNER_ID)
+    .eq("owner_id", userId)
     .single();
   return (data?.plan as Plan) ?? "free";
 }
 
 export async function getAccessStatus(): Promise<AccessStatus> {
-  // Admin account always has full access
-  return { status: "active" };
+  const { userId } = await auth();
+  if (!userId) return { status: "expired" };
 
   const service = createServiceClient();
 
   // Check if paid plan exists
-  const { data: customer, error: customerError } = await service
+  const { data: customer } = await service
     .from("customers")
     .select("plan, plan_period_end")
-    .eq("owner_id", OWNER_ID)
+    .eq("owner_id", userId)
     .single();
 
   if (customer?.plan === "pro" || customer?.plan === "lifetime") {
@@ -39,10 +40,10 @@ export async function getAccessStatus(): Promise<AccessStatus> {
   }
 
   // Check trial — based on first project creation date
-  const { data: firstProject, error: projectError } = await service
+  const { data: firstProject } = await service
     .from("projects")
     .select("created_at")
-    .eq("owner_id", OWNER_ID)
+    .eq("owner_id", userId)
     .order("created_at", { ascending: true })
     .limit(1)
     .single();
@@ -61,14 +62,17 @@ export async function getAccessStatus(): Promise<AccessStatus> {
 }
 
 export async function upsertCustomer(fields: {
+  owner_id?: string;
   dodo_customer_id?: string;
   dodo_subscription_id?: string;
   plan: Plan;
   plan_period_end?: string | null;
 }) {
+  const owner_id = fields.owner_id ?? process.env.ADMIN_USER_ID;
+  if (!owner_id) return { error: "No owner_id" };
   const service = createServiceClient();
   const { error } = await service
     .from("customers")
-    .upsert({ owner_id: OWNER_ID, ...fields }, { onConflict: "owner_id" });
+    .upsert({ ...fields, owner_id }, { onConflict: "owner_id" });
   return { error: error?.message ?? null };
 }

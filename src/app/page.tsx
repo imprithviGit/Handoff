@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 
 const features = [
   { icon: "↗", title: "One shareable link", description: "Share a single URL. Clients see updates, files, and approvals — no login needed.", tag: "Core" },
@@ -39,6 +40,7 @@ async function startCheckout(plan: string) {
 export default function Home() {
   const [pricingTab, setPricingTab] = useState<"monthly" | "annual" | "lifetime">("annual");
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const { isSignedIn } = useAuth();
 
   async function handleCheckout(plan: string) {
     setLoadingPlan(plan);
@@ -61,13 +63,18 @@ export default function Home() {
             <a href="#pricing" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors cursor-pointer">Pricing</a>
           </div>
           <div className="flex items-center gap-3 ml-auto">
-            <a href="/dashboard" className="cursor-pointer text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition-colors px-3.5 py-2 rounded-full">
-              Try dashboard →
-            </a>
-            <button className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors cursor-pointer px-3 py-2">Log in</button>
-            <button className="cursor-pointer text-sm font-semibold bg-emerald-500 hover:bg-emerald-400 text-black px-5 py-2.5 rounded-full transition-colors">
-              Get started free ↗
-            </button>
+            {isSignedIn ? (
+              <a href="/dashboard" className="cursor-pointer text-sm font-semibold bg-emerald-500 hover:bg-emerald-400 text-black px-5 py-2.5 rounded-full transition-colors">
+                Go to Dashboard →
+              </a>
+            ) : (
+              <>
+                <a href="/login" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors cursor-pointer px-3 py-2">Log in</a>
+                <a href="/signup" className="cursor-pointer text-sm font-semibold bg-emerald-500 hover:bg-emerald-400 text-black px-5 py-2.5 rounded-full transition-colors">
+                  Get started free ↗
+                </a>
+              </>
+            )}
           </div>
         </div>
       </nav>

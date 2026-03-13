@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { signOut, getUser } from "@/lib/actions/auth";
+import { useUser, useClerk } from "@clerk/nextjs";
 
 // ── icons ─────────────────────────────────────────────────────────────────────
 
@@ -67,19 +67,13 @@ function NavItem({ href, icon, label, expanded, active }: {
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [expanded, setExpanded] = useState(false);
-  const [userName, setUserName] = useState("Account");
-  const [userEmail, setUserEmail] = useState("");
-  const [userInitial, setUserInitial] = useState("A");
   const pathname = usePathname();
+  const { user } = useUser();
+  const { signOut } = useClerk();
 
-  useEffect(() => {
-    getUser().then((user) => {
-      if (!user) return;
-      setUserName(user.name);
-      setUserEmail(user.email);
-      setUserInitial(user.name[0]?.toUpperCase() ?? "A");
-    });
-  }, []);
+  const userName    = user?.firstName ?? user?.emailAddresses[0]?.emailAddress ?? "Account";
+  const userEmail   = user?.emailAddresses[0]?.emailAddress ?? "";
+  const userInitial = userName[0]?.toUpperCase() ?? "A";
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex" style={{ fontFamily: "var(--font-geist), sans-serif" }}>
@@ -122,7 +116,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <p className="text-[11px] text-gray-400 whitespace-nowrap">{userEmail}</p>
             </div>
             <button
-              onClick={() => signOut()}
+              onClick={() => signOut({ redirectUrl: "/login" })}
               className={`cursor-pointer text-[10px] text-gray-400 hover:text-red-500 transition-colors whitespace-nowrap ${expanded ? "opacity-100 delay-75" : "opacity-0 w-0 overflow-hidden"}`}
               title="Sign out"
             >
