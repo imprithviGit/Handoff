@@ -84,30 +84,32 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <aside
         onMouseEnter={() => setExpanded(true)}
         onMouseLeave={() => setExpanded(false)}
-        className={`bg-white border-r border-gray-100 flex flex-col fixed h-full z-20 shadow-[1px_0_0_0_#f1f5f9] transition-all duration-200 ease-out overflow-hidden ${
+        className={`bg-white border-r border-gray-100 flex flex-col fixed h-full z-20 shadow-[1px_0_0_0_#f1f5f9] transition-all duration-200 ease-out ${
           expanded ? "w-52" : "w-14"
         }`}
       >
         {/* Logo */}
-        <div className="h-14 flex items-center border-b border-gray-100 px-3.5">
-          <Link href="/" className="flex items-center gap-2.5 cursor-pointer min-w-0">
-            <div className={`flex flex-col transition-all duration-150 ${expanded ? "opacity-100 delay-75" : "opacity-0 w-0 overflow-hidden"}`}>
+        <div className="h-14 flex flex-col justify-center border-b border-gray-100 px-3.5 overflow-hidden">
+          {/* Handoff logo — hidden when collapsed */}
+          <div className={`transition-all duration-150 overflow-hidden ${expanded ? "max-h-5 opacity-100 delay-75" : "max-h-0 opacity-0"}`}>
+            <Link href="/" className="cursor-pointer">
               <span
-                className="text-[16px] font-extrabold tracking-tight text-gray-900 whitespace-nowrap leading-tight"
+                className="text-[16px] font-extrabold tracking-tight text-gray-900 whitespace-nowrap"
                 style={{ fontFamily: "var(--font-syne), sans-serif" }}
               >
                 Hand<span className="text-emerald-500">off</span>
               </span>
-              {user?.firstName && (
-                <span
-                  className="text-[11px] font-bold text-gray-400 whitespace-nowrap leading-tight"
-                  style={{ fontFamily: "var(--font-syne), sans-serif" }}
-                >
-                  Hey {user.firstName}
-                </span>
-              )}
-            </div>
-          </Link>
+            </Link>
+          </div>
+          {/* Hey name — always visible */}
+          {user?.firstName && (
+            <span
+              className="text-[11px] font-bold text-gray-500 whitespace-nowrap overflow-hidden text-ellipsis leading-snug"
+              style={{ fontFamily: "var(--font-syne), sans-serif" }}
+            >
+              Hey {user.firstName}
+            </span>
+          )}
         </div>
 
         {/* Nav */}

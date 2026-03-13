@@ -28,7 +28,8 @@ export async function postMessage(projectId: string, body: string, files: FileAt
   if (!userId) return { data: null, error: "Not authenticated" };
 
   const clerkUser = await (await (await import("@clerk/nextjs/server")).clerkClient()).users.getUser(userId);
-  const authorName = clerkUser.firstName ?? clerkUser.emailAddresses[0]?.emailAddress ?? "Freelancer";
+  const fullName = [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(" ");
+  const authorName = fullName || clerkUser.emailAddresses[0]?.emailAddress || "Freelancer";
 
   const service = createServiceClient();
   const { data, error } = await service
