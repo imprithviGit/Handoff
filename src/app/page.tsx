@@ -343,7 +343,7 @@ export default function Home() {
               {[
                 { icon: "⚡", text: "No forms, no dashboards to learn — just type and post" },
                 { icon: "🔗", text: "Client gets the link once — it works forever" },
-                { icon: "💸", text: "Starts free. Pro is $8/mo — less than your cheapest competitor" },
+                { icon: "💸", text: "14-day free trial. Pro is $8/mo — less than your cheapest competitor" },
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-3 text-sm text-black/70">
                   <span>{item.icon}</span>
@@ -477,7 +477,7 @@ export default function Home() {
           <div className="text-center mb-10">
             <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-3">Pricing</p>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Fraction of what others charge</h2>
-            <p className="text-sm text-gray-400">HoneyBook $19 · Dubsado $20 · Copilot $29. We're <span className="font-semibold text-emerald-600">$8/mo</span> — and built for exactly this.</p>
+            <p className="text-sm text-gray-400">HoneyBook $19 · Dubsado $20 · Copilot $29. We're <span className="font-semibold text-emerald-600">$8/mo</span> — and built for exactly this. <span className="font-semibold text-gray-600">14-day free trial, no card needed.</span></p>
           </div>
 
           {/* Comparison grid */}
@@ -532,19 +532,19 @@ export default function Home() {
           {pricingTab !== "lifetime" && (
             <div className="grid md:grid-cols-2 gap-5 max-w-2xl mx-auto">
               <div className="bg-white border border-gray-200 rounded-2xl p-7">
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Free</p>
-                <p className="text-4xl font-extrabold text-gray-900 mb-1">$0</p>
-                <p className="text-xs text-gray-400 mb-7">Forever free, no card needed</p>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Free trial</p>
+                <p className="text-4xl font-extrabold text-gray-900 mb-1">14 days</p>
+                <p className="text-xs text-gray-400 mb-7">No credit card needed · Full access</p>
                 <ul className="space-y-2.5 mb-8">
-                  {["1 active project", "Shareable client portal", "File uploads (100 MB)", "Project update timeline", "Basic support"].map((item, i) => (
+                  {["Unlimited projects during trial", "Shareable client portal", "File uploads & approvals", "Project update timeline", "All Pro features included"].map((item, i) => (
                     <li key={i} className="flex items-center gap-2.5 text-sm text-gray-600">
                       <span className="text-gray-300 font-bold">✓</span>{item}
                     </li>
                   ))}
                 </ul>
-                <button className="cursor-pointer w-full py-3 rounded-xl border-2 border-gray-200 text-sm font-semibold text-gray-600 hover:border-gray-900 hover:text-gray-900 transition-all">
-                  Get started free
-                </button>
+                <a href="/signup" className="cursor-pointer block text-center w-full py-3 rounded-xl border-2 border-gray-200 text-sm font-semibold text-gray-600 hover:border-gray-900 hover:text-gray-900 transition-all">
+                  Start free trial
+                </a>
               </div>
 
               <div className="bg-emerald-500 border border-emerald-500 rounded-2xl p-7 relative text-black">
@@ -577,19 +577,19 @@ export default function Home() {
           {pricingTab === "lifetime" && (
             <div className="grid md:grid-cols-2 gap-5 max-w-2xl mx-auto">
               <div className="bg-white border border-gray-200 rounded-2xl p-7">
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Free</p>
-                <p className="text-4xl font-extrabold text-gray-900 mb-1">$0</p>
-                <p className="text-xs text-gray-400 mb-7">Forever free, no card needed</p>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Free trial</p>
+                <p className="text-4xl font-extrabold text-gray-900 mb-1">14 days</p>
+                <p className="text-xs text-gray-400 mb-7">No credit card needed · Full access</p>
                 <ul className="space-y-2.5 mb-8">
-                  {["1 active project", "Shareable client portal", "File uploads (100 MB)", "Project update timeline", "Basic support"].map((item, i) => (
+                  {["Unlimited projects during trial", "Shareable client portal", "File uploads & approvals", "Project update timeline", "All Pro features included"].map((item, i) => (
                     <li key={i} className="flex items-center gap-2.5 text-sm text-gray-600">
                       <span className="text-gray-300 font-bold">✓</span>{item}
                     </li>
                   ))}
                 </ul>
-                <button className="cursor-pointer w-full py-3 rounded-xl border-2 border-gray-200 text-sm font-semibold text-gray-600 hover:border-gray-900 hover:text-gray-900 transition-all">
-                  Get started free
-                </button>
+                <a href="/signup" className="cursor-pointer block text-center w-full py-3 rounded-xl border-2 border-gray-200 text-sm font-semibold text-gray-600 hover:border-gray-900 hover:text-gray-900 transition-all">
+                  Start free trial
+                </a>
               </div>
 
               <div className="bg-gray-950 border-2 border-emerald-500/40 rounded-2xl p-7 relative text-white">
@@ -633,7 +633,7 @@ export default function Home() {
           <button className="cursor-pointer inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 transition-colors text-black font-semibold text-sm px-8 py-3.5 rounded-full">
             Create your first project ↗
           </button>
-          <p className="mt-4 text-xs text-white/20">Free to start. No credit card.</p>
+          <p className="mt-4 text-xs text-white/20">14-day free trial. No credit card needed.</p>
         </div>
       </section>
 
