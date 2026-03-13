@@ -9,6 +9,8 @@ export default function LoginPage() {
         </span>
       </div>
       <SignIn
+        afterSignUpUrl="/onboarding"
+        afterSignInUrl="/dashboard"
         appearance={{
           elements: {
             rootBox: "w-full flex justify-center",
