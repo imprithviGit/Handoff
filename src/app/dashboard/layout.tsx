@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useUser, useClerk } from "@clerk/nextjs";
+import { useAccess } from "@/lib/hooks/useAccess";
 
 // ── icons ─────────────────────────────────────────────────────────────────────
 
@@ -70,6 +71,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
   const { user } = useUser();
   const { signOut } = useClerk();
+  const { isActive, isTrial, isExpired } = useAccess();
 
   const userName    = user?.firstName ?? user?.emailAddresses[0]?.emailAddress ?? "Account";
   const userEmail   = user?.emailAddresses[0]?.emailAddress ?? "";
@@ -112,7 +114,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               {userInitial}
             </div>
             <div className={`min-w-0 flex-1 transition-all duration-150 ${expanded ? "opacity-100 delay-75" : "opacity-0 w-0 overflow-hidden"}`}>
-              <p className="text-[12px] font-semibold text-gray-900 whitespace-nowrap leading-tight">{userName}</p>
+              <div className="flex items-center gap-1.5">
+                <p className="text-[12px] font-semibold text-gray-900 whitespace-nowrap leading-tight truncate">{userName}</p>
+                {isActive  && <span className="shrink-0 text-[9px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded-full">Pro</span>}
+                {isTrial   && <span className="shrink-0 text-[9px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded-full">Trial</span>}
+                {isExpired && <span className="shrink-0 text-[9px] font-bold text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded-full">Expired</span>}
+              </div>
               <p className="text-[11px] text-gray-400 whitespace-nowrap">{userEmail}</p>
             </div>
             <button
