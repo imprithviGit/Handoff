@@ -31,8 +31,6 @@ export async function getAccessStatus(): Promise<AccessStatus> {
     .eq("owner_id", OWNER_ID)
     .single();
 
-  console.log("[getAccessStatus] customer:", customer, "error:", customerError?.message);
-
   if (customer?.plan === "pro" || customer?.plan === "lifetime") {
     return { status: "active" };
   }
@@ -46,8 +44,6 @@ export async function getAccessStatus(): Promise<AccessStatus> {
     .limit(1)
     .single();
 
-  console.log("[getAccessStatus] firstProject:", firstProject, "error:", projectError?.message);
-
   if (!firstProject) {
     return { status: "trial", daysLeft: 14 };
   }
@@ -56,8 +52,6 @@ export async function getAccessStatus(): Promise<AccessStatus> {
   const now        = new Date();
   const daysPassed = Math.floor((now.getTime() - trialStart.getTime()) / (1000 * 60 * 60 * 24));
   const daysLeft   = 14 - daysPassed;
-
-  console.log("[getAccessStatus] trialStart:", trialStart, "daysPassed:", daysPassed, "daysLeft:", daysLeft);
 
   if (daysLeft > 0) return { status: "trial", daysLeft };
   return { status: "expired" };

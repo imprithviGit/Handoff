@@ -8,14 +8,11 @@ export function useAccess() {
   const [access, setAccess] = useState<AccessStatus | null>(null);
 
   useEffect(() => {
-    console.log("[useAccess] calling getAccessStatus...");
     getAccessStatus()
       .then((result) => {
-        console.log("[useAccess] result:", result);
         setAccess(result);
       })
-      .catch((err) => {
-        console.error("[useAccess] getAccessStatus failed:", err);
+      .catch(() => {
         setAccess({ status: "trial", daysLeft: 14 });
       });
   }, []);
