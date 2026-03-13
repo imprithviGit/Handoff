@@ -73,7 +73,7 @@ export default function SettingsPage() {
       {/* Top bar */}
       <div className="bg-white border-b border-gray-100 px-8 py-4 sticky top-0 z-10 shadow-[0_1px_0_0_#f1f5f9]">
         <h1 className="text-[15px] font-extrabold text-gray-900 tracking-tight" style={{ fontFamily: "var(--font-syne), sans-serif" }}>
-          {isLoaded && <>Hey <span className="text-emerald-500">{user?.firstName?.split(" ")[0]}</span></>}
+          {isLoaded && <>Hey, <span className="text-emerald-500">{user?.firstName?.split(" ")[0]}</span></>}
         </h1>
       </div>
 
