@@ -137,7 +137,7 @@ export default function DashboardPage() {
   }));
 
   const [showModal, setShowModal] = useState(false);
-  const [newProject, setNewProject] = useState({ name: "", client: "", deadline: "", amount: "", notes: "", isContract: false });
+  const [newProject, setNewProject] = useState({ name: "", client: "", clientEmail: "", deadline: "", amount: "", notes: "", isContract: false });
   const [creating, setCreating]   = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
   const [target, setTarget] = useState<number>(0);
@@ -190,6 +190,7 @@ export default function DashboardPage() {
     await createProject({
       name: newProject.name,
       client_name: newProject.client || undefined,
+      client_email: newProject.clientEmail || undefined,
       deadline: newProject.isContract ? undefined : (newProject.deadline || undefined),
       amount: newProject.amount ? Number(newProject.amount) : undefined,
       description: newProject.notes || undefined,
@@ -197,7 +198,7 @@ export default function DashboardPage() {
     });
     await refetch();
     setCreating(false);
-    setNewProject({ name: "", client: "", deadline: "", amount: "", notes: "", isContract: false });
+    setNewProject({ name: "", client: "", clientEmail: "", deadline: "", amount: "", notes: "", isContract: false });
     setShowModal(false);
   }
 
@@ -503,6 +504,16 @@ export default function DashboardPage() {
                   placeholder="e.g. Riya Kapoor"
                   value={newProject.client}
                   onChange={(e) => setNewProject({ ...newProject, client: e.target.value })}
+                  className="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400 transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 mb-1.5">Client email <span className="font-normal text-gray-400">(optional)</span></label>
+                <input
+                  type="email"
+                  placeholder="e.g. riya@company.com"
+                  value={newProject.clientEmail}
+                  onChange={(e) => setNewProject({ ...newProject, clientEmail: e.target.value })}
                   className="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400 transition-all"
                 />
               </div>

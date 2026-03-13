@@ -3,7 +3,8 @@
 import { useState, use, useRef } from "react";
 import Link from "next/link";
 import { useClientPortal } from "@/lib/hooks/useProjectData";
-import { postClientMessage, uploadClientFile } from "@/lib/actions/messages";
+import { postClientMessage } from "@/lib/actions/messages";
+import { uploadClientFileDirect } from "@/lib/utils/uploadFile";
 import { decideApproval } from "@/lib/actions/approvals";
 import type { Message, Approval, FileAttachment } from "@/lib/supabase/types";
 
@@ -186,7 +187,7 @@ export default function ClientPortal({ params }: { params: Promise<{ id: string 
     const clientName = project!.client_name ?? "Client";
     let uploadedFiles: FileAttachment[] = [];
     if (replyFiles.length > 0) {
-      const results = await Promise.all(replyFiles.map((f) => uploadClientFile(token, f)));
+      const results = await Promise.all(replyFiles.map((f) => uploadClientFileDirect(token, f)));
       uploadedFiles = results.filter((r): r is FileAttachment => r !== null);
     }
     const { data, error } = await postClientMessage(token, clientName, replyText.trim(), uploadedFiles);
@@ -435,7 +436,7 @@ export default function ClientPortal({ params }: { params: Promise<{ id: string 
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                            <p className="text-[13px] font-semibold text-gray-900">{u.author_name}</p>
+                            <p className="text-[13px] font-semibold text-gray-900">{isMe ? "You" : u.author_name}</p>
                             {entryTag && (
                               <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700">
                                 {entryTag}

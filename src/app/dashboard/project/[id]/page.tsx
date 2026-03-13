@@ -4,7 +4,8 @@ import { useState, use, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useProjectDetail } from "@/lib/hooks/useProjects";
 import { useMessages, useApprovals } from "@/lib/hooks/useProjectData";
-import { postMessage, uploadFile } from "@/lib/actions/messages";
+import { postMessage } from "@/lib/actions/messages";
+import { uploadFileDirect } from "@/lib/utils/uploadFile";
 import { createApproval, reviseApproval } from "@/lib/actions/approvals";
 import { deleteProject } from "@/lib/actions/projects";
 import { useRouter } from "next/navigation";
@@ -233,7 +234,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
     setSubmitting(true);
     let uploadedFiles: FileAttachment[] = [];
     if (updateFiles.length > 0) {
-      const results = await Promise.all(updateFiles.map((f) => uploadFile(id, f)));
+      const results = await Promise.all(updateFiles.map((f) => uploadFileDirect(id, f)));
       uploadedFiles = results.filter((r): r is FileAttachment => r !== null);
     }
     const { error } = await postMessage(id, updateText.trim(), uploadedFiles);
@@ -250,7 +251,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
     setApprovalSubmitting(true);
     let uploadedFiles: FileAttachment[] = [];
     if (approvalFiles.length > 0) {
-      const results = await Promise.all(approvalFiles.map((f) => uploadFile(id, f)));
+      const results = await Promise.all(approvalFiles.map((f) => uploadFileDirect(id, f)));
       uploadedFiles = results.filter((r): r is FileAttachment => r !== null);
     }
     const { error } = await createApproval(id, newApproval.title, newApproval.description, uploadedFiles);
