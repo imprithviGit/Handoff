@@ -17,7 +17,7 @@ function getLast7Months() {
 
 export default function RevenuePage() {
   const { projects, loading } = useProjects();
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
   const [target, setTarget]         = useState<number>(0);
   const [targetInput, setTargetInput] = useState<string>("0");
   const [editing, setEditing]       = useState(false);
@@ -69,8 +69,8 @@ export default function RevenuePage() {
 
       {/* Top bar */}
       <div className="bg-white border-b border-gray-100 px-8 py-4 sticky top-0 z-10">
-        <h1 className="text-xl font-extrabold text-gray-900 tracking-tight" style={{ fontFamily: "var(--font-syne), sans-serif" }}>
-          Hey <span className="text-emerald-500">{user?.firstName ?? "there"}</span>
+        <h1 className="text-[15px] font-extrabold text-gray-900 tracking-tight" style={{ fontFamily: "var(--font-syne), sans-serif" }}>
+          {isLoaded && <>Hey <span className="text-emerald-500">{user?.firstName?.split(" ")[0]}</span></>}
         </h1>
       </div>
 

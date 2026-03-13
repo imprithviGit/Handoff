@@ -111,7 +111,7 @@ export default function DashboardPage() {
   const { projects: dbProjects, loading, refetch } = useProjects();
   const { unread } = useNotifications(dbProjects.map((p) => p.id));
   const { isExpired, isTrial, daysLeft } = useAccess();
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
   const [showPaywallOverlay, setShowPaywallOverlay] = useState(false);
   const [showHardPaywall, setShowHardPaywall]       = useState(false);
 
@@ -213,8 +213,8 @@ export default function DashboardPage() {
 
       {/* Top bar */}
       <div className="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10 shadow-[0_1px_0_0_#f1f5f9]">
-        <h1 className="text-xl font-extrabold text-gray-900 tracking-tight" style={{ fontFamily: "var(--font-syne), sans-serif" }}>
-          Hey <span className="text-emerald-500">{user?.firstName ?? "there"}</span>
+        <h1 className="text-[15px] font-extrabold text-gray-900 tracking-tight" style={{ fontFamily: "var(--font-syne), sans-serif" }}>
+          {isLoaded && <>Hey <span className="text-emerald-500">{user?.firstName?.split(" ")[0]}</span></>}
         </h1>
         <div className="flex items-center gap-3">
           {(isTrial || isExpired) && (
