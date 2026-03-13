@@ -103,7 +103,7 @@ export default function SettingsPage() {
                   {[user?.firstName, user?.lastName].filter(Boolean).join(" ") || "—"}
                 </p>
                 <p className="text-xs text-gray-400 mt-0.5">{user?.emailAddresses[0]?.emailAddress ?? "—"}</p>
-                {user?.unsafeMetadata?.country && (
+                {typeof user?.unsafeMetadata?.country === "string" && (
                   <p className="text-xs text-gray-400 mt-0.5">{user.unsafeMetadata.country as string}</p>
                 )}
               </div>
