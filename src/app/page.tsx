@@ -503,7 +503,7 @@ export default function Home() {
               </button>
               <button onClick={() => setPricingTab("lifetime")} className={`cursor-pointer px-5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 ${pricingTab === "lifetime" ? "bg-white text-gray-900 shadow-sm" : "text-gray-400 hover:text-gray-700"}`}>
                 Lifetime
-                <span className="text-[10px] font-bold bg-amber-100 text-amber-600 px-1.5 py-0.5 rounded-md">🔥</span>
+                <span className="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-md">Limited offer</span>
               </button>
             </div>
           </div>
@@ -572,7 +572,7 @@ export default function Home() {
               </div>
 
               <div className="bg-gray-950 border-2 border-emerald-500/40 rounded-2xl p-7 relative text-white">
-                <div className="absolute -top-3 left-6 bg-emerald-400 text-black text-xs font-bold px-3 py-1 rounded-full">Limited offer</div>
+                <div className="absolute -top-3 left-6 bg-emerald-400 text-black text-xs font-bold px-3 py-1 rounded-full">Limited time offer</div>
                 <p className="text-xs font-bold text-white/25 uppercase tracking-widest mb-4">Lifetime</p>
                 <div className="flex items-end gap-2 mb-1">
                   <p className="text-4xl font-extrabold text-white">$179</p>
