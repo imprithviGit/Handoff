@@ -101,9 +101,6 @@ export default function Home() {
           <a href="/signup" className="cursor-pointer bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-sm px-7 py-3.5 rounded-full transition-colors shadow-md shadow-emerald-100">
             Start for free ↗
           </a>
-          <a href="/p/demo" className="cursor-pointer text-sm font-semibold text-gray-500 hover:text-gray-900 px-7 py-3.5 rounded-full border border-gray-200 hover:border-gray-400 transition-all">
-            See a live example
-          </a>
         </div>
 
         <div className="flex items-center gap-6 pt-6 border-t border-gray-100">
@@ -135,6 +132,10 @@ export default function Home() {
             playsInline
             className="w-full block"
           />
+        </div>
+        <div className="mt-5 text-center">
+          <p className="text-lg font-bold text-gray-900">That's it. Seriously.</p>
+          <p className="text-sm text-gray-400 mt-1">30 seconds to set up. Your client gets a link. Everyone stays on the same page.</p>
         </div>
       </section>
 
