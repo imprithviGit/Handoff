@@ -332,7 +332,7 @@ export default function OnboardingPage() {
             <p className="text-[11px] text-gray-400 mb-3">No data deleted · Cancel anytime · Secure payment via Dodo Payments</p>
             <button
               onClick={markOnboardingComplete}
-              className="cursor-pointer text-[12px] text-gray-400 hover:text-gray-600 transition-colors underline"
+              className="cursor-pointer text-[13px] font-semibold text-gray-500 hover:text-gray-800 transition-colors underline"
             >
               Continue with free trial →
             </button>
