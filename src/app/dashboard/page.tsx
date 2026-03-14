@@ -136,6 +136,7 @@ export default function DashboardPage() {
     token: p.share_token,
   }));
 
+  const [chartHovered, setChartHovered] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [newProject, setNewProject] = useState({ name: "", client: "", clientEmail: "", deadline: "", amount: "", notes: "", isContract: false });
   const [creating, setCreating]   = useState(false);
@@ -267,28 +268,54 @@ export default function DashboardPage() {
           <div className="w-px h-8 bg-gray-100 shrink-0" />
 
           <div
-            className="flex-1 min-w-0 transition-all duration-200"
-            style={{ height: "40px" }}
-            onMouseEnter={(e) => (e.currentTarget.style.height = "64px")}
-            onMouseLeave={(e) => (e.currentTarget.style.height = "40px")}
+            className="flex-1 min-w-0"
+            style={{
+              height: chartHovered ? "76px" : "44px",
+              transition: "height 0.4s cubic-bezier(0.34, 1.15, 0.64, 1)",
+            }}
+            onMouseEnter={() => setChartHovered(true)}
+            onMouseLeave={() => setChartHovered(false)}
           >
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={monthlyEarnings} barSize={14} barCategoryGap="30%" margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#cbd5e1" }} />
+              <BarChart data={monthlyEarnings} barSize={13} barCategoryGap="38%" margin={{ top: 4, right: 2, left: 2, bottom: 0 }}>
+                <XAxis
+                  dataKey="month"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 9, fill: "#94a3b8", fontWeight: 600 }}
+                />
                 <YAxis hide />
                 <Tooltip
                   cursor={false}
-                  content={({ active, payload }) =>
+                  content={({ active, payload, label }) =>
                     active && payload?.length ? (
-                      <div className="bg-gray-900 text-white text-[11px] font-semibold px-2 py-1 rounded-lg shadow-lg">
-                        ${payload[0].value?.toLocaleString()}
+                      <div style={{
+                        background: "white",
+                        border: "1px solid #f1f5f9",
+                        borderRadius: "12px",
+                        padding: "8px 14px",
+                        boxShadow: "0 12px 32px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.05)",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: "2px",
+                        pointerEvents: "none",
+                      }}>
+                        <span style={{ fontSize: "9px", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em" }}>{label}</span>
+                        <span style={{ fontSize: "15px", fontWeight: 800, color: "#111827", letterSpacing: "-0.02em" }}>
+                          ${Number(payload[0].value ?? 0).toLocaleString()}
+                        </span>
                       </div>
                     ) : null
                   }
+                  animationDuration={120}
                 />
-                <Bar dataKey="amount" radius={[3, 3, 0, 0]}>
+                <Bar dataKey="amount" radius={[5, 5, 0, 0]}>
                   {monthlyEarnings.map((_, i) => (
-                    <Cell key={i} fill={i === monthlyEarnings.length - 1 ? "#10b981" : "#e2e8f0"} />
+                    <Cell
+                      key={i}
+                      fill={i === monthlyEarnings.length - 1 ? "#10b981" : "#e2e8f0"}
+                    />
                   ))}
                 </Bar>
               </BarChart>

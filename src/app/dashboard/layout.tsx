@@ -91,6 +91,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Logo */}
         <div className="h-14 flex items-center border-b border-gray-100 px-3.5">
           <Link href="/" className="flex items-center gap-2.5 cursor-pointer min-w-0">
+            <img src="/handoff-logo.jpeg" alt="Handoff" className="w-7 h-7 rounded-lg shrink-0" />
             <span
               className={`text-[16px] font-extrabold tracking-tight text-gray-900 whitespace-nowrap transition-all duration-150 ${expanded ? "opacity-100 delay-75" : "opacity-0 w-0 overflow-hidden"}`}
               style={{ fontFamily: "var(--font-syne), sans-serif" }}
