@@ -2,14 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { Webhook } from "svix";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   const webhookSecret = process.env.CLERK_WEBHOOK_SECRET;
   if (!webhookSecret) return NextResponse.json({ error: "No webhook secret" }, { status: 500 });
 
-  // Verify the webhook signature
-  const svix = new Webhook(webhookSecret);
+  const svixInstance = new Webhook(webhookSecret);
   const body = await req.text();
   const headers = {
     "svix-id":        req.headers.get("svix-id") ?? "",
@@ -19,7 +18,7 @@ export async function POST(req: NextRequest) {
 
   let event: { type: string; data: { email_addresses: { email_address: string }[]; first_name?: string } };
   try {
-    event = svix.verify(body, headers) as typeof event;
+    event = svixInstance.verify(body, headers) as typeof event;
   } catch {
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
@@ -31,6 +30,8 @@ export async function POST(req: NextRequest) {
   const email = event.data.email_addresses?.[0]?.email_address;
   const firstName = event.data.first_name ?? "there";
   if (!email) return NextResponse.json({ error: "No email" }, { status: 400 });
+
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
   await resend.emails.send({
     from: "Handoff <hello@gethandoff.co>",
