@@ -606,6 +606,9 @@ export default function ClientPortal({ params }: { params: Promise<{ id: string 
               get yours free
             </Link>
           </p>
+          <a href="https://x.com/gethandoff" target="_blank" rel="noopener noreferrer" className="text-[12px] text-gray-400 hover:text-gray-600 transition-colors">
+            @gethandoff on X →
+          </a>
         </div>
 
         </div>{/* end main content */}

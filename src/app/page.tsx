@@ -617,7 +617,7 @@ export default function Home() {
           <div className="flex gap-6 text-xs text-gray-400">
             <a href="#" className="cursor-pointer hover:text-gray-900 transition-colors">Privacy</a>
             <a href="#" className="cursor-pointer hover:text-gray-900 transition-colors">Terms</a>
-            <a href="#" className="cursor-pointer hover:text-gray-900 transition-colors">Twitter</a>
+            <a href="https://x.com/gethandoff" target="_blank" rel="noopener noreferrer" className="cursor-pointer hover:text-gray-900 transition-colors">X / Twitter</a>
           </div>
         </div>
       </footer>

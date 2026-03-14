@@ -248,6 +248,14 @@ export default function SettingsPage() {
                 Share on X →
               </a>
               <a
+                href="https://x.com/gethandoff"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cursor-pointer shrink-0 text-center text-[12px] font-semibold text-gray-600 border border-gray-200 hover:border-gray-400 hover:text-gray-900 px-3 py-2 rounded-lg transition-all"
+              >
+                @gethandoff
+              </a>
+              <a
                 href={`https://www.linkedin.com/sharing/share-offsite/?url=${referralUrl}`}
                 target="_blank"
                 rel="noopener noreferrer"
