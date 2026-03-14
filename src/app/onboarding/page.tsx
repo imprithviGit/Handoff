@@ -41,6 +41,16 @@ function TopBar({ step }: { step: number }) {
   );
 }
 
+async function startCheckout(plan: string) {
+  const res = await fetch("/api/dodo/checkout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ plan }),
+  });
+  const data = await res.json();
+  if (data.url) window.location.href = data.url;
+}
+
 export default function OnboardingPage() {
   const [step, setStep] = useState(1);
   const [name, setName]       = useState("");
@@ -210,40 +220,109 @@ export default function OnboardingPage() {
         </div>
       )}
 
-      {/* Step 4 — Ready */}
+      {/* Step 4 — Pricing */}
       {step === 4 && (
         <div className="flex flex-col min-h-screen">
           <TopBar step={4} />
-          <div className="flex flex-1 flex-col items-center justify-center px-8 py-12 max-w-lg mx-auto w-full text-center">
-            <div className="w-12 h-12 rounded-xl bg-emerald-500 flex items-center justify-center mx-auto mb-6">
-              <svg className="w-6 h-6 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 6L9 17l-5-5" />
-              </svg>
+          <div className="flex flex-1 flex-col items-center justify-center px-6 py-10 max-w-4xl mx-auto w-full">
+
+            <div className="text-center mb-8">
+              <div className="flex items-center justify-center gap-2 mb-4 bg-emerald-50 border border-emerald-100 rounded-full px-4 py-2 w-fit mx-auto">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <p className="text-[12px] font-semibold text-emerald-700">14-day free trial active — no card needed</p>
+              </div>
+              <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight" style={{ fontFamily: "var(--font-syne), sans-serif" }}>
+                You're all set{name ? `, ${name.split(" ")[0]}` : ""}. Choose a plan.
+              </h2>
+              <p className="text-sm text-gray-400 mt-2">Start free. Upgrade anytime before your trial ends.</p>
             </div>
 
-            <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight mb-2" style={{ fontFamily: "var(--font-syne), sans-serif" }}>
-              You're all set{name ? `, ${name.split(" ")[0]}` : ""}.
-            </h2>
-            <p className="text-sm text-gray-400 mb-3 leading-relaxed">
-              Your 14-day free trial is active. Full access to everything — no credit card needed.
-            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full mb-6">
 
-            <div className="flex items-center gap-2 mb-10 bg-emerald-50 border border-emerald-100 rounded-full px-4 py-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <p className="text-[12px] font-semibold text-emerald-700">14-day free trial active</p>
+              {/* Monthly */}
+              <div className="border border-gray-200 rounded-2xl p-5 flex flex-col">
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Monthly</p>
+                <div className="flex items-end gap-1 mb-0.5">
+                  <p className="text-3xl font-extrabold text-gray-900">$11</p>
+                  <span className="text-gray-400 text-sm mb-1">/mo</span>
+                </div>
+                <p className="text-xs text-gray-400 mb-5">Billed monthly, cancel anytime</p>
+                <ul className="space-y-2 mb-6 flex-1">
+                  {["Unlimited projects", "Shareable client portal", "File uploads & approvals", "Custom branding", "Priority support"].map((item, i) => (
+                    <li key={i} className="flex items-center gap-2 text-xs text-gray-600">
+                      <span className="text-emerald-500 font-bold shrink-0">✓</span>{item}
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={() => startCheckout("pro_monthly")}
+                  className="cursor-pointer w-full py-2.5 rounded-xl border-2 border-gray-200 hover:border-gray-900 text-sm font-semibold text-gray-700 transition-colors"
+                >
+                  Get started →
+                </button>
+              </div>
+
+              {/* Annual */}
+              <div className="relative bg-emerald-500 rounded-2xl p-5 flex flex-col text-black">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-400 text-amber-900 text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap">
+                  Most popular
+                </div>
+                <p className="text-xs font-bold text-black/40 uppercase tracking-widest mb-4">Annual</p>
+                <div className="flex items-end gap-1 mb-0.5">
+                  <p className="text-3xl font-extrabold">$8</p>
+                  <span className="text-black/40 text-sm mb-1">/mo</span>
+                </div>
+                <p className="text-xs text-black/50 mb-0.5">Billed annually — save $36/year</p>
+                <p className="text-xs font-semibold text-black/70 mb-5">2.5× cheaper than alternatives</p>
+                <ul className="space-y-2 mb-6 flex-1">
+                  {["Unlimited projects", "Shareable client portal", "File uploads & approvals", "Custom branding", "Priority support"].map((item, i) => (
+                    <li key={i} className="flex items-center gap-2 text-xs text-black/70">
+                      <span className="text-black/50 font-bold shrink-0">✓</span>{item}
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={() => startCheckout("pro_annual")}
+                  className="cursor-pointer w-full py-2.5 rounded-xl bg-black text-emerald-400 font-bold text-sm hover:bg-gray-900 transition-colors"
+                >
+                  Get started →
+                </button>
+              </div>
+
+              {/* Lifetime */}
+              <div className="relative bg-gray-950 border-2 border-emerald-500/30 rounded-2xl p-5 flex flex-col text-white">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-400 text-black text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap">
+                  Limited time offer
+                </div>
+                <p className="text-xs font-bold text-white/25 uppercase tracking-widest mb-4">Lifetime</p>
+                <div className="flex items-end gap-2 mb-0.5">
+                  <p className="text-3xl font-extrabold text-white">$179</p>
+                  <span className="text-white/20 line-through text-sm mb-1">$216</span>
+                </div>
+                <p className="text-xs text-white/30 mb-0.5">One-time payment, yours forever</p>
+                <p className="text-xs text-emerald-400 font-semibold mb-5">Pays for itself in 22 months</p>
+                <ul className="space-y-2 mb-6 flex-1">
+                  {["Everything in Pro", "Lifetime updates included", "No recurring fees, ever", "Lock in today's price", "Founding member badge"].map((item, i) => (
+                    <li key={i} className="flex items-center gap-2 text-xs text-white/50">
+                      <span className="text-emerald-400 font-bold shrink-0">✓</span>{item}
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={() => startCheckout("lifetime")}
+                  className="cursor-pointer w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-sm transition-colors"
+                >
+                  Get lifetime access →
+                </button>
+              </div>
             </div>
 
+            <p className="text-[11px] text-gray-400 mb-3">No data deleted · Cancel anytime · Secure payment via Dodo Payments</p>
             <button
               onClick={() => router.push("/dashboard")}
-              className="cursor-pointer w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-sm transition-colors mb-3"
+              className="cursor-pointer text-[12px] text-gray-400 hover:text-gray-600 transition-colors underline"
             >
-              Create my first project →
-            </button>
-            <button
-              onClick={() => router.push("/dashboard")}
-              className="cursor-pointer text-[12px] text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              Go to dashboard
+              Continue with free trial →
             </button>
           </div>
         </div>
