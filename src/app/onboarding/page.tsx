@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 
@@ -57,7 +57,19 @@ export default function OnboardingPage() {
   const [country, setCountry] = useState("");
   const [saving, setSaving]   = useState(false);
   const router = useRouter();
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
+
+  // Redirect away if onboarding already completed
+  useEffect(() => {
+    if (isLoaded && user?.unsafeMetadata?.onboardingComplete === true) {
+      router.replace("/dashboard");
+    }
+  }, [isLoaded, user, router]);
+
+  async function markOnboardingComplete() {
+    await user?.update({ unsafeMetadata: { ...user.unsafeMetadata, onboardingComplete: true } });
+    router.push("/dashboard");
+  }
 
   async function handleNameNext() {
     if (!name.trim() || !country) return;
@@ -65,7 +77,7 @@ export default function OnboardingPage() {
     const parts = name.trim().split(" ");
     const firstName = parts[0];
     const lastName  = parts.slice(1).join(" ") || "";
-    await user?.update({ firstName, lastName, unsafeMetadata: { country } });
+    await user?.update({ firstName, lastName, unsafeMetadata: { ...user?.unsafeMetadata, country } });
     setSaving(false);
     setStep(2);
   }
@@ -319,7 +331,7 @@ export default function OnboardingPage() {
 
             <p className="text-[11px] text-gray-400 mb-3">No data deleted · Cancel anytime · Secure payment via Dodo Payments</p>
             <button
-              onClick={() => router.push("/dashboard")}
+              onClick={markOnboardingComplete}
               className="cursor-pointer text-[12px] text-gray-400 hover:text-gray-600 transition-colors underline"
             >
               Continue with free trial →
