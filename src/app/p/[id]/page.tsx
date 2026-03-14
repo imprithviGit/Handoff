@@ -609,6 +609,13 @@ export default function ClientPortal({ params }: { params: Promise<{ id: string 
           <a href="https://x.com/gethandoff" target="_blank" rel="noopener noreferrer" className="text-[12px] text-gray-400 hover:text-gray-600 transition-colors">
             @gethandoff on X →
           </a>
+          <p className="text-[12px] text-gray-400">
+            Questions about Handoff?{" "}
+            <a href="mailto:hello@gethandoff.co" className="text-emerald-600 font-semibold hover:text-emerald-500 transition-colors">
+              hello@gethandoff.co
+            </a>
+            {" "}— we reply within 24 hrs.
+          </p>
         </div>
 
         </div>{/* end main content */}

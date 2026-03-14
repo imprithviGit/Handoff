@@ -267,6 +267,25 @@ export default function SettingsPage() {
           </div>
         </section>
 
+        {/* ── Support ── */}
+        <section className="bg-white rounded-2xl border border-gray-100 shadow-[0_1px_4px_rgba(0,0,0,0.05)] overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100">
+            <h2 className="text-[13px] font-semibold text-gray-900">Support</h2>
+          </div>
+          <div className="px-6 py-5 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-[13px] font-medium text-gray-700">Need help?</p>
+              <p className="text-[11px] text-gray-400 mt-0.5">We reply within 24 hours.</p>
+            </div>
+            <a
+              href="mailto:hello@gethandoff.co"
+              className="cursor-pointer shrink-0 text-[12px] font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-4 py-2 rounded-lg transition-colors"
+            >
+              hello@gethandoff.co
+            </a>
+          </div>
+        </section>
+
         {/* ── Account ── */}
         <section className="bg-white rounded-2xl border border-gray-100 shadow-[0_1px_4px_rgba(0,0,0,0.05)] overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-100">
