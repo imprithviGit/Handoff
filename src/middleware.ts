@@ -7,9 +7,9 @@ const isAuthRoute = createRouteMatcher(["/login", "/signup"]);
 const isRootRoute = createRouteMatcher(["/"]);
 
 export default clerkMiddleware(async (auth, req) => {
-  const { userId } = await auth();
-
   if (isWebhookRoute(req)) return NextResponse.next();
+
+  const { userId } = await auth();
 
   if (isProtectedRoute(req)) await auth.protect();
 
