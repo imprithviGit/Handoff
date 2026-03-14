@@ -218,7 +218,7 @@ export default function ClientPortal({ params }: { params: Promise<{ id: string 
       {/* Header */}
       <div className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <img src="/handoff-logo.jpeg" alt="Handoff" className="w-6 h-6 rounded-md" />
+          <img src="/handoff-logo.png" alt="Handoff" className="w-6 h-6 rounded-md" />
           <span className="text-[15px] font-extrabold tracking-tight text-gray-900" style={{ fontFamily: "var(--font-syne), sans-serif" }}>Hand<span className="text-emerald-500">off</span></span>
           <span className="text-gray-300 mx-1">/</span>
           <span className="text-[14px] font-medium text-gray-600">{project.name}</span>
@@ -595,7 +595,7 @@ export default function ClientPortal({ params }: { params: Promise<{ id: string 
         {/* Footer */}
         <div className="mt-14 py-8 border-t border-gray-100 flex flex-col items-center gap-3">
           <Link href="/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 group">
-            <img src="/handoff-logo.jpeg" alt="Handoff" className="w-8 h-8 rounded-xl" />
+            <img src="/handoff-logo.png" alt="Handoff" className="w-8 h-8 rounded-xl" />
             <span className="text-2xl font-extrabold tracking-tight text-gray-900" style={{ fontFamily: "var(--font-syne), sans-serif" }}>
               Hand<span className="text-emerald-500">off</span>
             </span>

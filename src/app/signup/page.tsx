@@ -4,7 +4,7 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center px-4" style={{ fontFamily: "var(--font-geist), sans-serif" }}>
       <div className="mb-8 flex flex-col items-center gap-3">
-        <img src="/handoff-logo.jpeg" alt="Handoff" className="w-12 h-12 rounded-2xl" />
+        <img src="/handoff-logo.png" alt="Handoff" className="w-12 h-12 rounded-2xl" />
         <span className="text-2xl font-extrabold tracking-tight text-gray-900" style={{ fontFamily: "var(--font-syne), sans-serif" }}>
           Hand<span className="text-emerald-500">off</span>
         </span>

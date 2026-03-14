@@ -49,7 +49,7 @@ export default function Home() {
       <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-8 flex items-center gap-10 h-16">
           <a href="/" className="cursor-pointer shrink-0 flex items-center gap-2">
-            <img src="/handoff-logo.jpeg" alt="Handoff" className="w-7 h-7 rounded-lg" />
+            <img src="/handoff-logo.png" alt="Handoff" className="w-7 h-7 rounded-lg" />
             <span className="text-xl font-extrabold tracking-tight text-gray-900" style={{ fontFamily: "var(--font-syne), sans-serif" }}>Hand<span className="text-emerald-500">off</span></span>
           </a>
           <div className="hidden md:flex items-center gap-8 flex-1">
@@ -610,7 +610,7 @@ export default function Home() {
       <footer className="border-t border-gray-100 bg-white px-8 py-7">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <img src="/handoff-logo.jpeg" alt="Handoff" className="w-6 h-6 rounded-md" />
+            <img src="/handoff-logo.png" alt="Handoff" className="w-6 h-6 rounded-md" />
             <span className="text-lg font-extrabold text-gray-900" style={{ fontFamily: "var(--font-syne), sans-serif" }}>Hand<span className="text-emerald-500">off</span></span>
           </div>
           <p className="text-xs text-gray-400">© 2025 Handoff — Built for freelancers.</p>

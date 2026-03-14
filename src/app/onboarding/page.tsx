@@ -24,7 +24,7 @@ function TopBar({ step }: { step: number }) {
   return (
     <div className="flex items-center justify-between px-8 py-5 border-b border-gray-100 shrink-0">
       <div className="flex items-center gap-2">
-        <img src="/handoff-logo.jpeg" alt="Handoff" className="w-7 h-7 rounded-lg" />
+        <img src="/handoff-logo.png" alt="Handoff" className="w-7 h-7 rounded-lg" />
         <span className="text-lg font-extrabold tracking-tight text-gray-900" style={{ fontFamily: "var(--font-syne), sans-serif" }}>
           Hand<span className="text-emerald-500">off</span>
         </span>
