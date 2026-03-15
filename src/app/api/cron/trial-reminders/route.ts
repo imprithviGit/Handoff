@@ -16,21 +16,21 @@ function pricingButtons() {
       <tr>
         <td style="padding-bottom: 10px;">
           <a href="${checkoutLink("pro_annual")}" style="display: block; background: #10b981; color: #000; font-weight: 700; font-size: 14px; padding: 13px 24px; border-radius: 10px; text-decoration: none; text-align: center;">
-            Get Pro — $8/mo (Annual) →
+            Get Pro $8/mo (Annual) →
           </a>
         </td>
       </tr>
       <tr>
         <td style="padding-bottom: 10px;">
           <a href="${checkoutLink("pro_monthly")}" style="display: block; background: #f9fafb; border: 1px solid #e5e7eb; color: #374151; font-weight: 600; font-size: 14px; padding: 13px 24px; border-radius: 10px; text-decoration: none; text-align: center;">
-            Monthly — $11/mo
+            Monthly at $11/mo
           </a>
         </td>
       </tr>
       <tr>
         <td>
           <a href="${checkoutLink("lifetime")}" style="display: block; background: #030712; color: #34d399; font-weight: 700; font-size: 14px; padding: 13px 24px; border-radius: 10px; text-decoration: none; text-align: center;">
-            Lifetime access — $179 (one-time)
+            Lifetime access for $179 (one-time)
           </a>
         </td>
       </tr>
@@ -45,23 +45,23 @@ function buildFounderEmail(firstName: string) {
         <img src="${BASE_URL}/handoff-logo.png" alt="Handoff" width="36" height="36" style="border-radius: 8px; margin-right: 10px;" />
         <span style="font-size: 22px; font-weight: 800; letter-spacing: -0.03em; color: #111827;">Hand<span style="color: #10b981;">off</span></span>
       </div>
-      <h1 style="font-size: 20px; font-weight: 800; margin: 0 0 16px;">Hey ${firstName} — Prithvi here 👋</h1>
+      <h1 style="font-size: 20px; font-weight: 800; margin: 0 0 16px;">Hey ${firstName}, Prithvi here 👋</h1>
       <p style="font-size: 15px; color: #374151; line-height: 1.7; margin: 0 0 16px;">
-        A couple of years ago I was freelancing on the side — mostly web projects. I had a client who kept giving feedback over WhatsApp, then email, then a Notion comment, then a voice note. By the time I sat down to make revisions I had no idea which feedback was final, what was approved, and what was still pending.
+        A couple of years ago I was freelancing on the side, mostly web projects. I had a client who kept giving feedback over WhatsApp, then email, then a Notion comment, then a voice note. By the time I sat down to make revisions I had no idea which feedback was final, what was approved, and what was still pending.
       </p>
       <p style="font-size: 15px; color: #374151; line-height: 1.7; margin: 0 0 16px;">
-        I lost the client. Not because the work was bad — because the communication was a mess and they lost trust in me.
+        I lost the client. Not because the work was bad, but because the communication was a mess and they lost trust in me.
       </p>
       <p style="font-size: 15px; color: #374151; line-height: 1.7; margin: 0 0 24px;">
         That's what Handoff fixes. One link, everything in one place, nothing gets lost.
       </p>
       <p style="font-size: 15px; color: #374151; line-height: 1.7; margin: 0 0 28px;">
-        How's it going so far? Reply and let me know — I read every reply.
+        How's it going so far? Reply and let me know. I read every reply.
       </p>
-      <p style="font-size: 15px; color: #374151; line-height: 1.7; margin: 0 0 4px;">— Prithvi</p>
+      <p style="font-size: 15px; color: #374151; line-height: 1.7; margin: 0 0 4px;">Prithvi</p>
       <p style="font-size: 13px; color: #9ca3af; margin: 0 0 4px;">Founder, Handoff</p>
       <a href="mailto:hello@gethandoff.co" style="font-size: 13px; color: #10b981;">hello@gethandoff.co</a>
-      <p style="font-size: 12px; color: #d1d5db; margin-top: 32px;">Handoff — Client portals for freelancers · <a href="${BASE_URL}" style="color: #d1d5db;">gethandoff.co</a></p>
+      <p style="font-size: 12px; color: #d1d5db; margin-top: 32px;">Handoff, client portals for freelancers · <a href="${BASE_URL}" style="color: #d1d5db;">gethandoff.co</a></p>
     </div>
   `;
 }
@@ -72,7 +72,7 @@ function buildEmail(firstName: string, subject: "3days" | "today") {
     ? `Hey ${firstName}, your free trial ends in 3 days`
     : `Hey ${firstName}, today is the last day of your trial`;
   const body = is3days
-    ? `You've had 11 days to explore Handoff — hope it's been useful. To keep your projects, client portals, and files accessible, upgrade before your trial ends on <strong>day 14</strong>.`
+    ? `You've had 11 days to explore Handoff. Hope it's been useful. To keep your projects, client portals, and files accessible, upgrade before your trial ends on <strong>day 14</strong>.`
     : `Your 14-day free trial ends today. After today you'll lose access to creating new projects and sharing client portals. Upgrade now to keep everything running smoothly.`;
 
   return `
@@ -85,10 +85,10 @@ function buildEmail(firstName: string, subject: "3days" | "today") {
       <p style="font-size: 15px; color: #6b7280; line-height: 1.6; margin: 0 0 28px;">${body}</p>
       ${pricingButtons()}
       <p style="font-size: 13px; color: #9ca3af; margin-top: 28px; line-height: 1.6;">
-        Questions? Reply to this email — we reply within 24 hrs.<br/>
+        Questions? Reply to this email, we reply within 24 hrs.<br/>
         <a href="mailto:hello@gethandoff.co" style="color: #10b981;">hello@gethandoff.co</a>
       </p>
-      <p style="font-size: 12px; color: #d1d5db; margin-top: 24px;">Handoff — Client portals for freelancers · <a href="${BASE_URL}" style="color: #d1d5db;">gethandoff.co</a></p>
+      <p style="font-size: 12px; color: #d1d5db; margin-top: 24px;">Handoff, client portals for freelancers · <a href="${BASE_URL}" style="color: #d1d5db;">gethandoff.co</a></p>
     </div>
   `;
 }
@@ -159,7 +159,7 @@ export async function GET(req: NextRequest) {
       await resend.emails.send({
         from: "Prithvi at Handoff <hello@gethandoff.co>",
         to: email,
-        subject: "7 days in — how's Handoff going?",
+        subject: "7 days in, how's Handoff going?",
         html: buildFounderEmail(firstName),
       });
 

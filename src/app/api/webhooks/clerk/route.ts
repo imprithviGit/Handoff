@@ -45,16 +45,16 @@ export async function POST(req: NextRequest) {
         </div>
         <h1 style="font-size: 22px; font-weight: 800; margin: 0 0 8px;">Hey ${firstName}, welcome!</h1>
         <p style="font-size: 15px; color: #6b7280; line-height: 1.6; margin: 0 0 24px;">
-          You're all set. Create your first project and share one link with your client — no more chasing feedback over email.
+          You're all set. Create your first project and share one link with your client. No more chasing feedback over email.
         </p>
         <a href="https://gethandoff.co/dashboard" style="display: inline-block; background: #10b981; color: #000; font-weight: 700; font-size: 14px; padding: 12px 24px; border-radius: 10px; text-decoration: none;">
           Create my first project →
         </a>
         <p style="font-size: 13px; color: #9ca3af; margin-top: 32px; line-height: 1.6;">
-          Your 14-day free trial is active — no credit card needed.<br/>
+          Your 14-day free trial is active. No credit card needed.<br/>
           Questions? Reply to this email or reach us at <a href="mailto:hello@gethandoff.co" style="color: #10b981;">hello@gethandoff.co</a>. We reply within 24 hrs.
         </p>
-        <p style="font-size: 12px; color: #d1d5db; margin-top: 24px;">Handoff — Client portals for freelancers · <a href="https://gethandoff.co" style="color: #d1d5db;">gethandoff.co</a></p>
+        <p style="font-size: 12px; color: #d1d5db; margin-top: 24px;">Handoff, client portals for freelancers · <a href="https://gethandoff.co" style="color: #d1d5db;">gethandoff.co</a></p>
       </div>
     `,
   });
