@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     html: `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 520px; margin: 0 auto; padding: 40px 24px; color: #111827;">
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 28px;">
-          <img src="https://gethandoff.co/handoff-logo.png" alt="Handoff" width="36" height="36" style="border-radius: 8px;" />
+          <img src="https://gethandoff.co/handoff-logo.png" alt="Handoff" width="36" height="36" style="border-radius: 8px; margin-right: 10px;" />
           <span style="font-size: 22px; font-weight: 800; letter-spacing: -0.03em; color: #111827;">Hand<span style="color: #10b981;">off</span></span>
         </div>
         <h1 style="font-size: 22px; font-weight: 800; margin: 0 0 8px;">Hey ${firstName}, welcome!</h1>

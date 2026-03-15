@@ -30,6 +30,7 @@ export interface Project {
   amount:       number | null;
   description:  string | null;
   is_contract:  boolean;
+  last_client_notified_at: string | null;
   created_at:   string;
   updated_at:   string;
 }
