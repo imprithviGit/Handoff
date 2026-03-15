@@ -143,7 +143,7 @@ export async function GET(req: NextRequest) {
     try {
       const u = await clerk.users.getUser(c.owner_id);
       const daysSinceSignup = (now.getTime() - u.createdAt) / (1000 * 60 * 60 * 24);
-      if (daysSinceSignup >= 0) founderEligible.push(c.owner_id); // TEMP: test all users
+      if (daysSinceSignup >= 7 && daysSinceSignup < 8) founderEligible.push(c.owner_id);
     } catch { /* skip */ }
   }
 
