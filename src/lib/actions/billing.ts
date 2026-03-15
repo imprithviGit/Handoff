@@ -31,7 +31,7 @@ export async function getAccessStatus(): Promise<AccessStatus> {
   // Check if paid plan exists
   const { data: customer } = await service
     .from("customers")
-    .select("plan, plan_period_end, trial_started_at")
+    .select("plan, plan_period_end")
     .eq("owner_id", userId)
     .single();
 
@@ -39,14 +39,11 @@ export async function getAccessStatus(): Promise<AccessStatus> {
     return { status: "active" };
   }
 
-  // Check trial — based on trial_started_at recorded on first project creation (immutable)
-  const trialStartDate = customer?.trial_started_at as string | null | undefined;
-
-  if (!trialStartDate) {
-    return { status: "trial", daysLeft: 14 };
-  }
-
-  const trialStart = new Date(trialStartDate);
+  // Trial starts from Clerk account creation date
+  const { clerkClient } = await import("@clerk/nextjs/server");
+  const clerk = await clerkClient();
+  const user = await clerk.users.getUser(userId);
+  const trialStart = new Date(user.createdAt);
   const now        = new Date();
   const daysPassed = Math.floor((now.getTime() - trialStart.getTime()) / (1000 * 60 * 60 * 24));
   const daysLeft   = 14 - daysPassed;
