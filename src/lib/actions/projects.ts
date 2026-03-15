@@ -20,7 +20,7 @@ export async function getProjects() {
     .eq("owner_id", ownerId)
     .order("deadline", { ascending: true, nullsFirst: false });
 
-  return { data, error: error?.message ?? null };
+  if (error) { console.error("Projects error:", error); return { data: null, error: "Something went wrong. Please try again." }; } return { data, error: null };
 }
 
 export async function getProject(id: string) {
@@ -33,7 +33,7 @@ export async function getProject(id: string) {
     .eq("owner_id", ownerId)
     .single();
 
-  return { data, error: error?.message ?? null };
+  if (error) { console.error("Projects error:", error); return { data: null, error: "Something went wrong. Please try again." }; } return { data, error: null };
 }
 
 export async function createProject(values: {
@@ -45,6 +45,11 @@ export async function createProject(values: {
   description?: string;
   is_contract?: boolean;
 }) {
+  if (!values.name?.trim()) return { data: null, error: "Project name is required." };
+  if (!values.is_contract && !values.deadline) return { data: null, error: "Deadline is required for fixed projects." };
+  if (values.client_email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.client_email)) return { data: null, error: "Invalid client email address." };
+  if (values.amount !== undefined && (isNaN(values.amount) || values.amount <= 0)) return { data: null, error: "Amount must be a positive number." };
+
   const supabase = createServiceClient();
   const ownerId = await getOwnerId();
   const { data, error } = await supabase
@@ -65,7 +70,7 @@ export async function createProject(values: {
   }
 
   revalidatePath("/dashboard");
-  return { data, error: error?.message ?? null };
+  if (error) { console.error("Projects error:", error); return { data: null, error: "Something went wrong. Please try again." }; } return { data, error: null };
 }
 
 export async function updateProject(id: string, values: {
@@ -87,7 +92,7 @@ export async function updateProject(id: string, values: {
 
   revalidatePath("/dashboard");
   revalidatePath(`/dashboard/project/${id}`);
-  return { error: error?.message ?? null };
+  if (error) { console.error("Projects error:", error); return { error: "Something went wrong. Please try again." }; } return { error: null };
 }
 
 export async function deleteProject(id: string) {
@@ -100,7 +105,7 @@ export async function deleteProject(id: string) {
     .eq("owner_id", ownerId);
 
   revalidatePath("/dashboard");
-  return { error: error?.message ?? null };
+  if (error) { console.error("Projects error:", error); return { error: "Something went wrong. Please try again." }; } return { error: null };
 }
 
 export async function resetShareToken(id: string) {
@@ -117,5 +122,5 @@ export async function resetShareToken(id: string) {
     .select("share_token")
     .single();
 
-  return { data, error: error?.message ?? null };
+  if (error) { console.error("Projects error:", error); return { data: null, error: "Something went wrong. Please try again." }; } return { data, error: null };
 }

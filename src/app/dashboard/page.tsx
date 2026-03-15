@@ -139,6 +139,7 @@ export default function DashboardPage() {
   const [chartHovered, setChartHovered] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [newProject, setNewProject] = useState({ name: "", client: "", clientEmail: "", deadline: "", amount: "", notes: "", isContract: false });
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [creating, setCreating]   = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
   const [target, setTarget] = useState<number>(0);
@@ -186,7 +187,13 @@ export default function DashboardPage() {
   }
 
   async function handleCreateProject() {
-    if (!newProject.name.trim()) return;
+    const errors: Record<string, string> = {};
+    if (!newProject.name.trim()) errors.name = "Project name is required.";
+    if (!newProject.isContract && !newProject.deadline) errors.deadline = "Deadline is required for fixed projects.";
+    if (newProject.clientEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newProject.clientEmail)) errors.clientEmail = "Enter a valid email address.";
+    if (newProject.amount && (isNaN(Number(newProject.amount)) || Number(newProject.amount) <= 0)) errors.amount = "Amount must be a positive number.";
+    if (Object.keys(errors).length > 0) { setFormErrors(errors); return; }
+    setFormErrors({});
     setCreating(true);
     await createProject({
       name: newProject.name,
@@ -200,6 +207,7 @@ export default function DashboardPage() {
     await refetch();
     setCreating(false);
     setNewProject({ name: "", client: "", clientEmail: "", deadline: "", amount: "", notes: "", isContract: false });
+    setFormErrors({});
     setShowModal(false);
   }
 
@@ -521,8 +529,9 @@ export default function DashboardPage() {
                   placeholder="e.g. Brand Redesign"
                   value={newProject.name}
                   onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
-                  className="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400 transition-all"
+                  className={`w-full border rounded-lg px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400 transition-all ${formErrors.name ? "border-red-400" : "border-gray-200"}`}
                 />
+                {formErrors.name && <p className="text-[11px] text-red-500 mt-1">{formErrors.name}</p>}
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1.5">Client name</label>
@@ -541,8 +550,9 @@ export default function DashboardPage() {
                   placeholder="e.g. riya@company.com"
                   value={newProject.clientEmail}
                   onChange={(e) => setNewProject({ ...newProject, clientEmail: e.target.value })}
-                  className="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400 transition-all"
+                  className={`w-full border rounded-lg px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400 transition-all ${formErrors.clientEmail ? "border-red-400" : "border-gray-200"}`}
                 />
+                {formErrors.clientEmail && <p className="text-[11px] text-red-500 mt-1">{formErrors.clientEmail}</p>}
               </div>
 
               {/* Contract toggle */}
@@ -568,8 +578,9 @@ export default function DashboardPage() {
                       type="date"
                       value={newProject.deadline}
                       onChange={(e) => setNewProject({ ...newProject, deadline: e.target.value })}
-                      className="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400 transition-all"
+                      className={`w-full border rounded-lg px-3.5 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400 transition-all ${formErrors.deadline ? "border-red-400" : "border-gray-200"}`}
                     />
+                    {formErrors.deadline && <p className="text-[11px] text-red-500 mt-1">{formErrors.deadline}</p>}
                   </div>
                 )}
                 <div className={newProject.isContract ? "col-span-2" : ""}>
@@ -580,9 +591,11 @@ export default function DashboardPage() {
                       type="number"
                       placeholder={newProject.isContract ? "Monthly rate" : "1200"}
                       value={newProject.amount}
+                      min="0"
                       onChange={(e) => setNewProject({ ...newProject, amount: e.target.value })}
-                      className="w-full border border-gray-200 rounded-lg pl-7 pr-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400 transition-all"
+                      className={`w-full border rounded-lg pl-7 pr-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400/30 focus:border-emerald-400 transition-all ${formErrors.amount ? "border-red-400" : "border-gray-200"}`}
                     />
+                    {formErrors.amount && <p className="text-[11px] text-red-500 mt-1">{formErrors.amount}</p>}
                   </div>
                 </div>
               </div>
@@ -607,7 +620,7 @@ export default function DashboardPage() {
               </button>
               <button
                 onClick={handleCreateProject}
-                disabled={creating || !newProject.name.trim()}
+                disabled={creating}
                 className="cursor-pointer flex-1 py-2.5 rounded-lg bg-gray-900 hover:bg-gray-800 disabled:opacity-50 text-white text-sm font-semibold transition-colors"
               >
                 {creating ? "Creating…" : "Create project"}

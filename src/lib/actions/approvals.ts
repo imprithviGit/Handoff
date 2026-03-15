@@ -15,7 +15,7 @@ export async function getApprovals(projectId: string) {
     .eq("project_id", projectId)
     .order("created_at", { ascending: false });
 
-  return { data, error: error?.message ?? null };
+  if (error) { console.error("Approvals error:", error); return { data: null, error: "Something went wrong. Please try again." }; } return { data, error: null };
 }
 
 // Uses service client until real auth is wired
@@ -30,7 +30,7 @@ export async function createApproval(projectId: string, title: string, descripti
     .select()
     .single();
 
-  return { data, error: error?.message ?? null };
+  if (error) { console.error("Approvals error:", error); return { data: null, error: "Something went wrong. Please try again." }; } return { data, error: null };
 }
 
 // Client decides — validated by share token, uses service role
@@ -65,7 +65,7 @@ export async function decideApproval(
     .update({ status, client_note: note ?? null })
     .eq("id", approvalId);
 
-  return { error: error?.message ?? null };
+  if (error) { console.error("Approvals error:", error); return { error: "Something went wrong. Please try again." }; } return { error: null };
 }
 
 // Freelancer revises and resubmits — resets to pending and clears client note
@@ -81,7 +81,7 @@ export async function reviseApproval(
     .update({ title, description, status: "pending", client_note: null })
     .eq("id", approvalId);
 
-  return { error: error?.message ?? null };
+  if (error) { console.error("Approvals error:", error); return { error: "Something went wrong. Please try again." }; } return { error: null };
 }
 
 export async function deleteApproval(id: string) {
@@ -113,5 +113,5 @@ export async function deleteApproval(id: string) {
     .delete()
     .eq("id", id);
 
-  return { error: error?.message ?? null };
+  if (error) { console.error("Approvals error:", error); return { error: "Something went wrong. Please try again." }; } return { error: null };
 }

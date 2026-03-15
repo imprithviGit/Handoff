@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     .from("project-files")
     .createSignedUploadUrl(path);
 
-  if (error || !data) return NextResponse.json({ error: error?.message }, { status: 500 });
+  if (error || !data) { console.error("Upload URL error:", error); return NextResponse.json({ error: "Failed to generate upload URL." }, { status: 500 }); }
 
   return NextResponse.json({ signedUrl: data.signedUrl, path, token: data.token });
 }

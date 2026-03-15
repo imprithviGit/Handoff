@@ -68,5 +68,5 @@ export async function upsertCustomer(fields: {
   const { error } = await service
     .from("customers")
     .upsert({ ...fields, owner_id }, { onConflict: "owner_id" });
-  return { error: error?.message ?? null };
+  if (error) { console.error("Billing error:", error); return { error: "Something went wrong. Please try again." }; } return { error: null };
 }

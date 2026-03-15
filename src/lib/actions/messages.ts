@@ -16,7 +16,7 @@ export async function getMessages(projectId: string) {
     .eq("project_id", projectId)
     .order("created_at", { ascending: false });
 
-  return { data, error: error?.message ?? null };
+  if (error) { console.error("Messages error:", error); return { data: null, error: "Something went wrong. Please try again." }; } return { data, error: null };
 }
 
 // Freelancer posts an update
@@ -38,7 +38,7 @@ export async function postMessage(projectId: string, body: string, files: FileAt
     .select()
     .single();
 
-  return { data, error: error?.message ?? null };
+  if (error) { console.error("Messages error:", error); return { data: null, error: "Something went wrong. Please try again." }; } return { data, error: null };
 }
 
 // Client replies — validated by share token, uses service role to bypass RLS
@@ -117,7 +117,7 @@ export async function postClientMessage(
     }
   }
 
-  return { data, error: error?.message ?? null };
+  if (error) { console.error("Messages error:", error); return { data: null, error: "Something went wrong. Please try again." }; } return { data, error: null };
 }
 
 // Upload a file to Supabase Storage, return the public URL + path
