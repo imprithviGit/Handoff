@@ -215,6 +215,19 @@ export default function ClientPortal({ params }: { params: Promise<{ id: string 
   return (
     <div className="min-h-screen bg-[#F8FAFC]" style={{ fontFamily: "var(--font-geist), sans-serif" }}>
 
+      {/* Made with Handoff badge */}
+      <a
+        href="https://www.gethandoff.co/?ref=badge"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-5 right-5 z-50 flex items-center gap-2 bg-white border border-gray-200 hover:border-emerald-300 shadow-md hover:shadow-emerald-100 rounded-full px-3.5 py-2 transition-all group"
+      >
+        <img src="/handoff-logo.png" alt="Handoff" className="w-4 h-4 rounded-sm" />
+        <span className="text-[11px] font-semibold text-gray-500 group-hover:text-gray-900 transition-colors">
+          Made with <span className="text-emerald-500">Handoff</span>
+        </span>
+      </a>
+
       {/* Header */}
       <div className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2.5">

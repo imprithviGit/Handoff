@@ -17,7 +17,30 @@ const syne = Syne({
 
 export const metadata: Metadata = {
   title: "Handoff — Client Portals for Freelancers",
-  description: "Send clients a professional project link. No app download, no login needed.",
+  description: "Send clients a professional project link. No app download, no login needed. Set up in 30 seconds. 14-day free trial.",
+  metadataBase: new URL("https://www.gethandoff.co"),
+  openGraph: {
+    title: "Handoff — Client Portals for Freelancers",
+    description: "Send clients a professional project link. No app download, no login needed. Set up in 30 seconds.",
+    url: "https://www.gethandoff.co",
+    siteName: "Handoff",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Handoff — Client portals for freelancers",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Handoff — Client Portals for Freelancers",
+    description: "Send clients a professional project link. No app download, no login needed. Set up in 30 seconds.",
+    site: "@gethandoff",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({
