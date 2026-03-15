@@ -56,6 +56,7 @@ export default function Home() {
             <a href="#features" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors cursor-pointer">Features</a>
             <a href="#how-it-works" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors cursor-pointer">How it works</a>
             <a href="#pricing" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors cursor-pointer">Pricing</a>
+            <a href="/blog" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors cursor-pointer">Blog</a>
           </div>
           <div className="flex items-center gap-3 ml-auto">
             {isSignedIn ? (
