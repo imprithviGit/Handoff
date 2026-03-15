@@ -11,6 +11,7 @@ export default function SignupPage() {
       </div>
       <SignUp
         appearance={{
+          layout: { socialButtonsVariant: "blockButton" },
           elements: {
             rootBox: "w-full flex justify-center",
             card: "shadow-[0_1px_4px_rgba(0,0,0,0.06)] border border-gray-100 rounded-2xl",
