@@ -195,7 +195,7 @@ export default function DashboardPage() {
     if (Object.keys(errors).length > 0) { setFormErrors(errors); return; }
     setFormErrors({});
     setCreating(true);
-    await createProject({
+    const { error: serverError } = await createProject({
       name: newProject.name,
       client_name: newProject.client || undefined,
       client_email: newProject.clientEmail || undefined,
@@ -204,8 +204,9 @@ export default function DashboardPage() {
       description: newProject.notes || undefined,
       is_contract: newProject.isContract,
     });
-    await refetch();
     setCreating(false);
+    if (serverError) { setFormErrors({ general: serverError }); return; }
+    await refetch();
     setNewProject({ name: "", client: "", clientEmail: "", deadline: "", amount: "", notes: "", isContract: false });
     setFormErrors({});
     setShowModal(false);
@@ -611,6 +612,9 @@ export default function DashboardPage() {
               </div>
             </div>
 
+            {formErrors.general && (
+              <p className="text-[12px] text-red-500 mt-4">{formErrors.general}</p>
+            )}
             <div className="flex gap-2.5 mt-5">
               <button
                 onClick={() => setShowModal(false)}
