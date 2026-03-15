@@ -260,7 +260,7 @@ export default function OnboardingPage() {
                 </div>
                 <p className="text-xs text-gray-400 mb-5">Billed monthly, cancel anytime</p>
                 <ul className="space-y-2 mb-6 flex-1">
-                  {["Unlimited projects", "Shareable client portal", "File uploads & approvals", "Custom branding", "Priority support"].map((item, i) => (
+                  {["Unlimited projects", "Shareable client portal", "File uploads & approvals", "Priority support"].map((item, i) => (
                     <li key={i} className="flex items-center gap-2 text-xs text-gray-600">
                       <span className="text-emerald-500 font-bold shrink-0">✓</span>{item}
                     </li>
@@ -287,7 +287,7 @@ export default function OnboardingPage() {
                 <p className="text-xs text-black/50 mb-0.5">Billed annually — save $36/year</p>
                 <p className="text-xs font-semibold text-black/70 mb-5">2.5× cheaper than alternatives</p>
                 <ul className="space-y-2 mb-6 flex-1">
-                  {["Unlimited projects", "Shareable client portal", "File uploads & approvals", "Custom branding", "Priority support"].map((item, i) => (
+                  {["Unlimited projects", "Shareable client portal", "File uploads & approvals", "Priority support"].map((item, i) => (
                     <li key={i} className="flex items-center gap-2 text-xs text-black/70">
                       <span className="text-black/50 font-bold shrink-0">✓</span>{item}
                     </li>

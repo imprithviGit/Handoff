@@ -8,7 +8,6 @@ const features = [
   { icon: "⌗", title: "Organised file delivery", description: "Upload deliverables directly. Versioned, labelled, always findable.", tag: "Files" },
   { icon: "◎", title: "Project timeline", description: "Post updates as you work. Clients get notified and stop chasing you.", tag: "Updates" },
   { icon: "✦", title: "File approvals", description: "Clients approve or request revisions right inside the portal. Documented.", tag: "Workflow" },
-  { icon: "◈", title: "Custom branding", description: "Add your logo and colours. Clients see your brand — not ours.", tag: "Pro" },
   { icon: "◷", title: "Share via any medium", description: "Copy your portal link and share it over email, Slack, LinkedIn — wherever you work.", tag: "Core" },
 ];
 
@@ -527,7 +526,7 @@ export default function Home() {
                 <p className="text-xs text-black/50 mb-1">{pricingTab === "annual" ? "Billed annually — save $36/year" : "Billed monthly, cancel anytime"}</p>
                 <p className="text-xs text-black/60 font-semibold mb-7">2.5× cheaper than alternatives</p>
                 <ul className="space-y-2.5 mb-8">
-                  {["Unlimited active projects", "Custom branding + logo", "Share via link — any medium", "File approvals & revisions", "1 GB file storage", "Priority support"].map((item, i) => (
+                  {["Unlimited active projects", "Share via link — any medium", "File approvals & revisions", "1 GB file storage", "Priority support"].map((item, i) => (
                     <li key={i} className="flex items-center gap-2.5 text-sm text-black/70">
                       <span className="text-black/50 font-bold">✓</span>{item}
                     </li>
