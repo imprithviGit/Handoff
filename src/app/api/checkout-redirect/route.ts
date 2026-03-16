@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
   try {
     const dodo = new DodoPayments({
       bearerToken: process.env.DODO_API_KEY!,
-      environment: "test_mode",
+      environment: "live_mode",
     });
 
     const session = await dodo.checkoutSessions.create({
