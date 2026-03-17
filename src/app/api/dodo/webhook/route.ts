@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import DodoPayments from "dodopayments";
-import { upsertCustomer } from "@/lib/actions/billing";
+import { createServiceClient } from "@/lib/supabase/server";
 import type { Plan } from "@/lib/actions/billing";
 
 function getDodo() {
   return new DodoPayments({
     bearerToken: process.env.DODO_API_KEY!,
-    environment: "test_mode",
+    environment: "live_mode",
   });
 }
 
@@ -15,6 +15,23 @@ function planFromProductId(productId: string): Plan {
   if (productId === process.env.DODO_PRO_MONTHLY_PRODUCT_ID) return "pro";
   if (productId === process.env.DODO_PRO_ANNUAL_PRODUCT_ID)  return "pro";
   return "free";
+}
+
+async function upgradePlan(fields: {
+  owner_id: string;
+  dodo_customer_id?: string;
+  dodo_subscription_id?: string;
+  plan: Plan;
+  plan_period_end?: string | null;
+}) {
+  const supabase = createServiceClient();
+  const { error } = await supabase
+    .from("customers")
+    .upsert(
+      { ...fields },
+      { onConflict: "owner_id" }
+    );
+  if (error) console.error("Webhook upsert error:", error);
 }
 
 export async function POST(req: NextRequest) {
@@ -38,50 +55,42 @@ export async function POST(req: NextRequest) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data = event.data as Record<string, any>;
 
-  console.log("Dodo webhook:", type);
+  console.log("Dodo webhook:", type, JSON.stringify(data).slice(0, 200));
 
   try {
     if (type === "payment.succeeded") {
-      const customerId     = data.customer?.customer_id as string ?? data.customer_id as string;
-      const subscriptionId = data.subscription_id as string | null ?? null;
-      const plan: Plan     = subscriptionId ? "pro" : "lifetime";
-      await upsertCustomer({
-        dodo_customer_id:     customerId,
-        dodo_subscription_id: subscriptionId ?? undefined,
-        plan,
-        plan_period_end: null,
-      });
+      const owner_id        = data.metadata?.owner_id as string | undefined;
+      const customerId      = data.customer?.customer_id as string ?? data.customer_id as string;
+      const subscriptionId  = data.subscription_id as string | null ?? null;
+      const plan: Plan      = subscriptionId ? "pro" : "lifetime";
+      if (!owner_id) { console.error("Webhook: no owner_id in metadata"); return NextResponse.json({ received: true }); }
+      await upgradePlan({ owner_id, dodo_customer_id: customerId, dodo_subscription_id: subscriptionId ?? undefined, plan, plan_period_end: null });
     }
 
     if (type === "subscription.active") {
-      const productId      = data.product_id as string;
-      const customerId     = data.customer?.customer_id as string ?? data.customer_id as string;
-      const subscriptionId = data.subscription_id as string;
-      const periodEnd      = data.next_billing_date as string | null ?? null;
-      await upsertCustomer({
-        dodo_customer_id:     customerId,
-        dodo_subscription_id: subscriptionId,
-        plan:                 planFromProductId(productId),
-        plan_period_end:      periodEnd,
-      });
+      const owner_id        = data.metadata?.owner_id as string | undefined;
+      const productId       = data.product_id as string;
+      const customerId      = data.customer?.customer_id as string ?? data.customer_id as string;
+      const subscriptionId  = data.subscription_id as string;
+      const periodEnd       = data.next_billing_date as string | null ?? null;
+      if (!owner_id) { console.error("Webhook: no owner_id in metadata"); return NextResponse.json({ received: true }); }
+      await upgradePlan({ owner_id, dodo_customer_id: customerId, dodo_subscription_id: subscriptionId, plan: planFromProductId(productId), plan_period_end: periodEnd });
     }
 
     if (type === "subscription.renewed") {
-      const productId      = data.product_id as string;
-      const customerId     = data.customer?.customer_id as string ?? data.customer_id as string;
-      const subscriptionId = data.subscription_id as string;
-      const periodEnd      = data.next_billing_date as string | null ?? null;
-      await upsertCustomer({
-        dodo_customer_id:     customerId,
-        dodo_subscription_id: subscriptionId,
-        plan:                 planFromProductId(productId),
-        plan_period_end:      periodEnd,
-      });
+      const owner_id        = data.metadata?.owner_id as string | undefined;
+      const productId       = data.product_id as string;
+      const customerId      = data.customer?.customer_id as string ?? data.customer_id as string;
+      const subscriptionId  = data.subscription_id as string;
+      const periodEnd       = data.next_billing_date as string | null ?? null;
+      if (!owner_id) { console.error("Webhook: no owner_id in metadata"); return NextResponse.json({ received: true }); }
+      await upgradePlan({ owner_id, dodo_customer_id: customerId, dodo_subscription_id: subscriptionId, plan: planFromProductId(productId), plan_period_end: periodEnd });
     }
 
     if (type === "subscription.cancelled" || type === "refund.succeeded") {
-      const customerId = data.customer?.customer_id as string ?? data.customer_id as string ?? null;
-      await upsertCustomer({ dodo_customer_id: customerId ?? undefined, plan: "free", plan_period_end: null });
+      const owner_id = data.metadata?.owner_id as string | undefined;
+      if (!owner_id) { console.error("Webhook: no owner_id in metadata"); return NextResponse.json({ received: true }); }
+      await upgradePlan({ owner_id, plan: "free", plan_period_end: null });
     }
   } catch (err) {
     console.error("Webhook processing failed:", err);

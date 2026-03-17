@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import DodoPayments from "dodopayments";
+import { auth } from "@clerk/nextjs/server";
 
 const PRODUCT_MAP: Record<string, string | undefined> = {
   pro_monthly: process.env.DODO_PRO_MONTHLY_PRODUCT_ID,
@@ -8,6 +9,11 @@ const PRODUCT_MAP: Record<string, string | undefined> = {
 };
 
 export async function POST(req: NextRequest) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const body = await req.json();
   const { plan } = body;
 
@@ -20,9 +26,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
   }
 
-  const ALLOWED_ORIGINS = ["https://handoff-eight.vercel.app", "https://gethandoff.co", "http://localhost:3000"];
+  const ALLOWED_ORIGINS = ["https://handoff-eight.vercel.app", "https://gethandoff.co", "https://www.gethandoff.co", "http://localhost:3000"];
   const requestOrigin = req.headers.get("origin") ?? "";
-  const origin = ALLOWED_ORIGINS.includes(requestOrigin) ? requestOrigin : "https://handoff-eight.vercel.app";
+  const origin = ALLOWED_ORIGINS.includes(requestOrigin) ? requestOrigin : "https://www.gethandoff.co";
 
   try {
     const dodo = new DodoPayments({
@@ -33,6 +39,7 @@ export async function POST(req: NextRequest) {
     const session = await dodo.checkoutSessions.create({
       product_cart: [{ product_id: productId, quantity: 1 }],
       return_url: `${origin}/dashboard?upgraded=true`,
+      metadata: { owner_id: userId },
     });
 
     const url = session.checkout_url;
