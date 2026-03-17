@@ -36,6 +36,10 @@ export default function Home() {
   const { isSignedIn } = useAuth();
 
   async function handleCheckout(plan: string) {
+    if (!isSignedIn) {
+      window.location.href = `/signup?plan=${plan}`;
+      return;
+    }
     setLoadingPlan(plan);
     await startCheckout(plan);
     setLoadingPlan(null);
