@@ -50,7 +50,7 @@ export default function Home() {
 
       {/* ── NAVBAR ── */}
       <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-8 flex items-center gap-10 h-16">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center gap-10 h-16">
           <a href="/" className="cursor-pointer shrink-0 flex items-center gap-2">
             <img src="/handoff-logo.png" alt="Handoff" className="w-7 h-7 rounded-lg" />
             <span className="text-xl font-extrabold tracking-tight text-gray-900" style={{ fontFamily: "var(--font-syne), sans-serif" }}>Hand<span className="text-emerald-500">off</span></span>
@@ -85,7 +85,7 @@ export default function Home() {
           30-second setup · 3× cheaper than HoneyBook
         </div>
 
-        <h1 className="text-5xl md:text-6xl font-extrabold leading-[1.15] tracking-tight mb-5 text-gray-900" style={{ fontFamily: "var(--font-syne), sans-serif" }}>
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-[1.15] tracking-tight mb-5 text-gray-900" style={{ fontFamily: "var(--font-syne), sans-serif" }}>
           Manage clients like
           <br />a <span className="text-emerald-500">pro freelancer.</span>
           <br />
@@ -454,7 +454,7 @@ export default function Home() {
           </div>
 
           {/* Comparison grid */}
-          <div className="grid grid-cols-4 gap-3 mb-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-16">
             {/* Competitor cards */}
             {[
               { name: "HoneyBook", price: "$19", label: "Full CRM suite" },
