@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /dashboard/
+Disallow: /signup
+Disallow: /login
+Disallow: /onboarding
+Disallow: /api/
+
+Sitemap: https://www.gethandoff.co/sitemap.xml
