@@ -329,13 +329,13 @@ export default function OnboardingPage() {
               </div>
             </div>
 
-            <p className="text-[11px] text-gray-400 mb-3">No data deleted · Cancel anytime · Secure payment via Dodo Payments</p>
             <button
               onClick={markOnboardingComplete}
-              className="cursor-pointer text-[13px] font-semibold text-gray-500 hover:text-gray-800 transition-colors underline"
+              className="cursor-pointer w-full max-w-sm py-3 rounded-xl border-2 border-emerald-500 text-emerald-600 font-bold text-sm hover:bg-emerald-50 transition-colors"
             >
-              Continue with free trial →
+              Continue with free trial — no card needed →
             </button>
+            <p className="text-[11px] text-gray-400 mt-3">No data deleted · Cancel anytime · Secure payment via Dodo Payments</p>
           </div>
         </div>
       )}
