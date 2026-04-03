@@ -619,8 +619,8 @@ export default function Home() {
           </div>
           <p className="text-xs text-gray-400">© 2025 Handoff — Built for freelancers.</p>
           <div className="flex gap-6 text-xs text-gray-400">
-            <a href="#" className="cursor-pointer hover:text-gray-900 transition-colors">Privacy</a>
-            <a href="#" className="cursor-pointer hover:text-gray-900 transition-colors">Terms</a>
+            <a href="/privacy" className="cursor-pointer hover:text-gray-900 transition-colors">Privacy</a>
+            <a href="/terms" className="cursor-pointer hover:text-gray-900 transition-colors">Terms</a>
             <a href="https://x.com/gethandoff" target="_blank" rel="noopener noreferrer" className="cursor-pointer hover:text-gray-900 transition-colors">X / Twitter</a>
           </div>
         </div>
