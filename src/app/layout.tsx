@@ -19,6 +19,10 @@ export const metadata: Metadata = {
   title: "Handoff: Client Portals for Freelancers",
   description: "Send clients a professional project link. No app download, no login needed. Set up in 30 seconds. 14-day free trial.",
   metadataBase: new URL("https://www.gethandoff.co"),
+  icons: {
+    icon: "/handoff-logo.png",
+    apple: "/handoff-logo.png",
+  },
   verification: {
     google: "XVTlsA5wprL6S_jNiVqzzSttrMqsXErbBQX2jwavIwo",
   },

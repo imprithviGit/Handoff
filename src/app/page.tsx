@@ -617,7 +617,7 @@ export default function Home() {
             <img src="/handoff-logo.png" alt="Handoff" className="w-6 h-6 rounded-md" />
             <span className="text-lg font-extrabold text-gray-900" style={{ fontFamily: "var(--font-syne), sans-serif" }}>Hand<span className="text-emerald-500">off</span></span>
           </div>
-          <p className="text-xs text-gray-400">© 2025 Handoff — Built for freelancers.</p>
+          <p className="text-xs text-gray-400">© 2026 Handoff. Built for freelancers.</p>
           <div className="flex gap-6 text-xs text-gray-400">
             <a href="/privacy" className="cursor-pointer hover:text-gray-900 transition-colors">Privacy</a>
             <a href="/terms" className="cursor-pointer hover:text-gray-900 transition-colors">Terms</a>

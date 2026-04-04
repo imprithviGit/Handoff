@@ -251,13 +251,13 @@ export default async function BlogPostPage({ params }: Props) {
             </span>
           </div>
           <p className="text-xs text-gray-400">
-            © 2025 Handoff — Built for freelancers.
+            © 2026 Handoff. Built for freelancers.
           </p>
           <div className="flex gap-6 text-xs text-gray-400">
-            <a href="#" className="hover:text-gray-900 transition-colors">
+            <a href="/privacy" className="hover:text-gray-900 transition-colors">
               Privacy
             </a>
-            <a href="#" className="hover:text-gray-900 transition-colors">
+            <a href="/terms" className="hover:text-gray-900 transition-colors">
               Terms
             </a>
             <a
